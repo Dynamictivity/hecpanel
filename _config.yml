@@ -1,5 +1,5 @@
 # Site settings
-title: HECPanel
+title: HEcPanel
 email: support@dynamictivity.com
 url: https://dynamictivity.github.io/hecpanel
 description: "HECPanel (Hosted Engineers Control Panel)  The ultimate hosting solution for Keen software's titles: Space Engineers, and Medieval Engineers"
@@ -10,7 +10,7 @@ color:
   links: '#219ab3'
 
 # Footer settings
-footer: HECPanel
+footer: HEcPanel
 
 # Social networks usernames (many more available: google-plus, flickr, dribbble, pinterest, instagram, tumblr, linkedin, etc.)
 social:
@@ -19,7 +19,7 @@ social:
   - title: facebook
     url:
   - title: stack-overflow
-    url: http://stackoverflow.com/questions/tagged/h
+    url: http://stackoverflow.com/questions/tagged/hecpanel
   - title: bitbucket
     url: http://bitbucket.org/dynamictivity
   - title: github
