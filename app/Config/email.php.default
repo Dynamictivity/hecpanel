@@ -1,0 +1,91 @@
+<?php
+/**
+ *  HE cPanel -- Hosting Engineers Control Panel
+ *  Copyright (C) 2015  Dynamictivity LLC (http://www.hecpanel.com)
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU Affero General Public License as
+ *   published by the Free Software Foundation, either version 3 of the
+ *   License, or (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU Affero General Public License for more details.
+ *
+ *   You should have received a copy of the GNU Affero General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Email configuration class.
+ * You can specify multiple configurations for production, development and testing.
+ *
+ * transport => The name of a supported transport; valid options are as follows:
+ *		Mail		- Send using PHP mail function
+ *		Smtp		- Send using SMTP
+ *		Debug		- Do not send the email, just return the result
+ *
+ * You can add custom transports (or override existing transports) by adding the
+ * appropriate file to app/Network/Email. Transports should be named 'YourTransport.php',
+ * where 'Your' is the name of the transport.
+ *
+ * from =>
+ * The origin email. See CakeEmail::from() about the valid values
+ *
+ */
+class EmailConfig {
+
+	public $default = array(
+		'transport' => 'Mail',
+		'from' => 'you@localhost',
+		//'charset' => 'utf-8',
+		//'headerCharset' => 'utf-8',
+	);
+
+	public $smtp = array(
+		'transport' => 'Smtp',
+		'from' => array('site@localhost' => 'My Site'),
+		'host' => 'localhost',
+		'port' => 25,
+		'timeout' => 30,
+		'username' => 'user',
+		'password' => 'secret',
+		'client' => null,
+		'log' => false,
+		//'charset' => 'utf-8',
+		//'headerCharset' => 'utf-8',
+	);
+
+	public $fast = array(
+		'from' => 'you@localhost',
+		'sender' => null,
+		'to' => null,
+		'cc' => null,
+		'bcc' => null,
+		'replyTo' => null,
+		'readReceipt' => null,
+		'returnPath' => null,
+		'messageId' => true,
+		'subject' => null,
+		'message' => null,
+		'headers' => null,
+		'viewRender' => null,
+		'template' => false,
+		'layout' => false,
+		'viewVars' => null,
+		'attachments' => null,
+		'emailFormat' => null,
+		'transport' => 'Smtp',
+		'host' => 'localhost',
+		'port' => 25,
+		'timeout' => 30,
+		'username' => 'user',
+		'password' => 'secret',
+		'client' => null,
+		'log' => true,
+		//'charset' => 'utf-8',
+		//'headerCharset' => 'utf-8',
+	);
+
+}

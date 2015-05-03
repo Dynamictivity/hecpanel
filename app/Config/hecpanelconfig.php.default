@@ -1,0 +1,74 @@
+<?php
+/**
+ *  HE cPanel -- Hosting Engineers Control Panel
+ *  Copyright (C) 2015  Dynamictivity LLC (http://www.hecpanel.com)
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU Affero General Public License as
+ *   published by the Free Software Foundation, either version 3 of the
+ *   License, or (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU Affero General Public License for more details.
+ *
+ *   You should have received a copy of the GNU Affero General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$config = array(
+    'Security' => array(
+        /* CHANGEME */
+        'salt' => 'zCiFfOkgpXjyd1BfBY1KQM9qkFlezHFJWhnwEOWsJZSAEqlREu3odkIJ9xhqCraB',
+        /* CHANGEME */
+        'cipherSeed' => '0284419739735722493650328272596723319786451285718739755503212965',
+    ),
+    APP_CONFIG_SCOPE => array(
+        'App' => array(
+            'appUrl' => 'http://demo.hecpanel.com',
+            'servername' => strtolower(gethostname()),
+            'environment' => 'DEV',
+            'googleAnalyticsId' => 'UA-5187184-20',
+        ),
+        'Controller' => array(
+            'Users' => 'signup,confirm,logout,login,forgot,reset,eula',
+        ),
+        'Email' => array(
+            'newAccountSubject' => 'Welcome to the Hosting Engineers Control Panel',
+            'newInstanceSubject' => 'Your Hosting Engineers Server Instance is Created',
+            'resetAccountSubject' => 'Reset Your Hosting Engineers Control Panel Password',
+        ),
+        'Instances' => array(
+            'firstOpenPort' => 27017,
+            'lastOpenPort' => 27040,
+            'hostServerInstanceLimit' => 20,
+            'serverBaseDirectory' => 'C:' . DS . 'instances' . DS . 'LIBS',
+            'serverDataDirectory' => 'C:' . DS . 'instances' . DS . 'DEV_INSTANCES',
+            'backupDirectory' => 'C:' . DS . 'instances' . DS . 'DEV_INSTANCES_BACKUP',
+            'sourceBinariesDirectory' => 'C:' . DS . 'Program Files (x86)' . DS . 'Steam' . DS . 'SteamApps' . DS . 'common' . DS . 'SpaceEngineers',
+        ),
+        'Users' => array(
+            'defaultRoleId' => 4,
+            'confirmedRoleId' => 3,
+            'registrationEnabled' => true
+        )
+    )
+);
+
+/**
+ * LDAP Settings
+ *
+ */
+$config['LDAP']['Db']['Config'] = 'ldap'; //What is the name of the db config that has the LDAP credentials
+$config['LDAP']['User']['Identifier'] = 'uid'; //What is the LDAP attribute that identifies the username attribute,
+// openldap, iplant, netscapr use uid, AD uses samaccountname
+$config['LDAP']['Group']['Identifier'] = 'cn'; //What is the LDAP attribute that identifies the group name, usually cn
+$config['LDAP']['Model'] = 'Idbroker.LdapAuth'; //Default model to use for LDAP components
+$config['LDAP']['LdapAuth']['Model'] = 'Idbroker.LdapAuth';
+$config['LDAP']['LdapAuth']['MirrorSQL']['Users'] = 'User'; //A SQL table to duplicate ldap records in for user
+//$config['LDAP']['LdapAuth']['MirrorSQL']['Groups'] = 'Role'; //A SQL table to duplicate LDAP records in for groups
+$config['LDAP']['LdapACL']['Model'] = 'Idbroker.LdapAcl';
+$config['LDAP']['LdapACL']['groupType'] = 'group';
+$config['LDAP']['groupType'] = 'groupofuniquenames'; //What object class do you use for your groups?
+//$config['LDAP']['Group']['behavior']['tree']['parent_id'] = '49db8df1-5e74-4e91-b15f-4d33e927f14e'; //Are you using a tree behavior?  Need to set the default parent_id?
