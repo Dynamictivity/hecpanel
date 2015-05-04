@@ -31,6 +31,7 @@ if (function_exists('ini_set')) {
 
     // the following line differs from its sibling
     // /app/Console/cake.php
+	//ini_set('include_path', $root . PATH_SEPARATOR . 'C:' . DS . 'xampp' . DS . 'htdocs' . DS . 'hecpanel' . DS . 'lib' . PATH_SEPARATOR . ini_get('include_path'));
     unset($root);
 }
 

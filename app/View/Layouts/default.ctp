@@ -19,8 +19,6 @@
 ?>
 
 <?php
-
-// TODO: Move to config
 $websiteDescription = Configure::read(APP_CONFIG_SCOPE . '.App.appName');
 ?>
 <!DOCTYPE html>
@@ -46,7 +44,8 @@ $websiteDescription = Configure::read(APP_CONFIG_SCOPE . '.App.appName');
         ?>
 
         <!-- Font Awesome CSS -->
-        <?php echo $this->Html->css('font-awesome.min'); ?>
+        <?php //echo $this->Html->css('font-awesome.min'); ?>
+        <?php echo $this->Html->css('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css'); ?>
 
         <!-- Bootstrap CSS -->
         <?php echo $this->Html->css('bootstrap.min'); ?>

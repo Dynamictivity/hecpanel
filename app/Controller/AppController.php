@@ -54,7 +54,6 @@ class AppController extends Controller {
             ),
             'authorize' => 'Controller'
         ),
-        'DebugKit.Toolbar',
         'RequestHandler',
     );
     public $helpers = array(

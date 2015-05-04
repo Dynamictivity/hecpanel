@@ -109,7 +109,6 @@ Configure::write(APP_CONFIG_SCOPE . '.App.apiVersion', 'v1');
 Configure::write(APP_CONFIG_SCOPE . '.Instances.serverArchiveDirectory', 'SERVER_ARCHIVES');
 Configure::write(APP_CONFIG_SCOPE . '.Instances.serverScriptsDirectory', 'SERVER_SCRIPTS');
 Configure::write(APP_CONFIG_SCOPE . '.Instances.serverBinariesDirectory', 'SERVER_BINARIES');
-Configure::write(APP_CONFIG_SCOPE . '.Instances.serverDataSkeletonDirectory', 'SERVER_SKELETON');
 
 Configure::write('Bootstrap.formButtonStyle', array(
     'div' => 'col col-md-9 col-md-offset-3',
