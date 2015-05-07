@@ -28,6 +28,7 @@ echo $this->Form->create('Instance', array(
 	<?php
 	echo $this->Form->input('name');
 	echo $this->Form->input('user_id');
+	echo $this->Form->input('game_id');
 	echo $this->Form->input('instance_type_id');
 	echo $this->Form->input('host_server_id', array('empty' => 'AUTOMATIC: Choose Best Host'));
 	?>

@@ -108,10 +108,12 @@ Configure::load('hecpanelconfig');
 Configure::write(APP_CONFIG_SCOPE . '.App.apiVersion', 'v1');
 // TODO: Move to config file in Instances plugin
 Configure::write(APP_CONFIG_SCOPE . '.Instances.games', array(
-	'1' => array(
+	array(
 		'name' => 'Space Engineers',
 		'folder' => 'SPACE_ENGINEERS',
 		'config' => 'SpaceEngineers-Dedicated.cfg',
+		'dedicatedBinary' => 'SpaceEngineersDedicated.exe',
+		'sourceBinariesDirectory' => 'C:' . DS . 'Program Files (x86)' . DS . 'Steam' . DS . 'SteamApps' . DS . 'common' . DS . 'SpaceEngineers',
 		'configOptions' => array(
 			'SessionSettings' => array(
 				'gameModes' => array(
@@ -231,15 +233,18 @@ Configure::write(APP_CONFIG_SCOPE . '.Instances.games', array(
 			),
 		)
 	),
-	'2' => array(
+	array(
 		'name' => 'Medieval Engineers',
 		'folder' => 'MEDIEVAL_ENGINEERS',
 		'config' => 'MedievalEngineers-Dedicated.cfg',
+		'dedicatedBinary' => 'MedievalEngineersDedicated.exe',
+		'sourceBinariesDirectory' => 'C:' . DS . 'Program Files (x86)' . DS . 'Steam' . DS . 'SteamApps' . DS . 'common' . DS . 'MedievalEngineers',
 	),
 ));
-			
-Configure::write(APP_CONFIG_SCOPE . '.Instances.serverArchiveDirectory', 'SERVER_ARCHIVES');
+
+//Configure::write(APP_CONFIG_SCOPE . '.Instances.serverArchiveDirectory', 'SERVER_ARCHIVES');
 Configure::write(APP_CONFIG_SCOPE . '.Instances.serverBinariesDirectory', 'SERVER_BINARIES');
+Configure::write(APP_CONFIG_SCOPE . '.Instances.serverDataSkeletonDirectory', 'SERVER_SKELETON');
 
 Configure::write('Bootstrap.formButtonStyle', array(
     'div' => 'col col-md-9 col-md-offset-3',

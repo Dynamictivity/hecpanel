@@ -37,6 +37,7 @@ class SEServerComponent extends Component {
 	public $hostServerInstanceLimit = null;
 	public $apiVersion = null;
 	public $apiKey = null;
+	public $games = null;
 	// TODO: Implement apiSecret (hash request with secret)
 	public $apiSecret = null;
 	// Simulate remote API call
@@ -61,6 +62,8 @@ class SEServerComponent extends Component {
 	private $hostServerNameList = false;
 	// This host server
 	private $hostServer = array();
+	// Cached instance
+	private $__instance = array();
 	// Configuration options for form
 	// TODO: Medieval Engineers
 	public $configOptions = array(
@@ -170,7 +173,7 @@ class SEServerComponent extends Component {
 	public $remoteCommands = array(
 		'commands' => array(
 			'backupAll' => '[backupAll] Backup all server instances',
-			'checkForUpdates' => '[checkForUpdates] Check for Space Engineers updates',
+			'checkForUpdates' => '[checkForUpdates] Check for game updates',
 			'cycleAll' => '[cycleAll] Cycle all server instances',
 			'restartAll' => '[restartAll] Restart all server instances',
 			'startAll' => '[startAll] Start all server instances',
@@ -207,13 +210,13 @@ class SEServerComponent extends Component {
 			$this->serverBaseDirectory = Configure::read(APP_CONFIG_SCOPE . '.Instances.serverBaseDirectory') . DS . Configure::read(APP_CONFIG_SCOPE . '.App.environment');
 		}
 		if (!$this->serverDataDirectory) {
-			$this->serverDataDirectory = Configure::read(APP_CONFIG_SCOPE . '.Instances.serverDataDirectory');
+			$this->serverDataDirectory = Configure::read(APP_CONFIG_SCOPE . '.Instances.serverDataDirectory') . DS . Configure::read(APP_CONFIG_SCOPE . '.App.environment');
 		}
 		if (!$this->serverBinariesDirectory) {
-			$this->serverBinariesDirectory = Configure::read(APP_CONFIG_SCOPE . '.Instances.serverBinariesDirectory');
+			$this->serverBinariesDirectory = $this->serverBaseDirectory . DS . Configure::read(APP_CONFIG_SCOPE . '.Instances.serverBinariesDirectory');
 		}
 		if (!$this->serverDataSkeletonDirectory) {
-			$this->serverDataSkeletonDirectory = Configure::read(APP_CONFIG_SCOPE . '.Instances.serverDataSkeletonDirectory');
+			$this->serverDataSkeletonDirectory = $this->serverBaseDirectory . DS . Configure::read(APP_CONFIG_SCOPE . '.Instances.serverDataSkeletonDirectory');
 		}
 		if (!$this->firstOpenPort) {
 			$this->firstOpenPort = Configure::read(APP_CONFIG_SCOPE . '.Instances.firstOpenPort');
@@ -232,6 +235,9 @@ class SEServerComponent extends Component {
 		}
 		if (!$this->apiSecret) {
 			$this->apiSecret = Configure::read(APP_CONFIG_SCOPE . '.App.apiSecret');
+		}
+		if (!$this->games) {
+			$this->games = Configure::read(APP_CONFIG_SCOPE . '.Instances.games');
 		}
 		// Create Http Socket oject
 		$this->Http = new HttpSocket();
@@ -268,6 +274,10 @@ class SEServerComponent extends Component {
 		}
 		return $options;
 	}
+	
+	public function getGameList() {
+		return Hash::extract($this->games, '{n}.name');
+	}
 
 	public function getRemoteCommands() {
 		return $this->remoteCommands;
@@ -275,11 +285,11 @@ class SEServerComponent extends Component {
 
 	// This function not utilized yet
 	public function pollAllMemoryUsage() {
-		// Ensure server list is set
-		$this->__setServerList();
-		// Cycle each server
+		// Ensure instance list is set
+		$this->__setInstanceList();
+		// Cycle each server instance
 		foreach ($this->instances as $instanceId) {
-			// Update each server's memory usage in the database
+			// Update each server instance's memory usage in the database
 			// TODO: Single SQL update
 			$status = $this->processState($instanceId);
 			if ($status !== 'Stopped') {
@@ -294,8 +304,7 @@ class SEServerComponent extends Component {
 		}
 	}
 
-	// TODO: This may be deprecated (merged into cycle) in the future in favor of cycle
-	// TODO: Medieval Engineers
+	// This should not be used directly, in favor of cycle
 	private function start($instanceId) {
 		if ($this->processState($instanceId) != 'Stopped') {
 			return $instanceId . ' is already started';
@@ -306,19 +315,25 @@ class SEServerComponent extends Component {
 		}
 		// Update Session XML
 		$this->__refreshConfig($instanceId);
-		// Execute server binary
-		exec('start /d "' . $this->serverBaseDirectory . DS . $this->serverBinariesDirectory . DS . 'DedicatedServer64" ' . $instanceId . '.exe -noconsole -path "' . $this->serverDataDirectory . DS . $this->readServer($instanceId)['User']['username'] . DS . $instanceId . DS . '"');
+		// Get instance
+		$instance = $this->readInstance($instanceId);
+		// Execute server instance binary
+		exec('start /d "' . $this->__getserverBinariesDirectory($instance['Instance']['game_id']) . DS . 'DedicatedServer64" ' . $instanceId . '.exe -noconsole -path "' . $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . DS . '"');
 		return $instanceId . ' is starting up';
+	}
+	
+	private function __getserverBinariesDirectory($gameId) {
+		return $this->serverBinariesDirectory . DS . $this->__getGameFolderList()[$gameId];
 	}
 
 	private function stop($instanceId, $forced = false) {
 		if ($this->processState($instanceId) == 'Stopped') {
 			return $instanceId . ' is already stopped';
 		}
-		// Stop server gracefully
+		// Stop server instance gracefully
 		exec('taskkill /IM ' . $instanceId . '.exe');
 		if ($forced) {
-			// Force kill server if still running
+			// Force kill server instance if still running
 			exec('taskkill /IM ' . $instanceId . '.exe /F');
 		}
 		return $instanceId . ' was sent a termination signal.';
@@ -327,25 +342,25 @@ class SEServerComponent extends Component {
 	private function cycle($instanceId) {
 		// Check if instance data exists
 		$this->__verifyInstanceExistence($instanceId, true, false);
-		// Backup the server
+		// Backup the server instance
 		$this->backup($instanceId);
-		// Stop server, force kill
+		// Stop server instance, force kill
 		$this->stop($instanceId, true);
-		// Update the server
+		// Update the server instance
 		$this->update($instanceId);
-		// Start the server
+		// Start the server instance
 		$this->start($instanceId);
 		return $instanceId . ' is starting up.';
 	}
 
 	private function reroll($instanceId) {
-		// Backup the server
+		// Backup the server instance
 		$this->backup($instanceId);
-		// Stop server, force kill
+		// Stop server instance, force kill
 		$this->stop($instanceId, true);
 		// Remove world save
 		$this->__removePath($this->getConfigPath($instanceId, 'active_world'));
-		// Start the server
+		// Start the server instance
 		$this->cycle($instanceId);
 		return $instanceId . ' now has a whole new world.';
 	}
@@ -353,17 +368,23 @@ class SEServerComponent extends Component {
 	private function backup($instanceId) {
 		// Copy current world saves to user backup directory
 		// TODO: Change this path, make it configurable
-		exec('robocopy "' . $this->serverDataDirectory . DS . $this->readServer($instanceId)['User']['username'] . DS . $instanceId . '\\Saves" "' . $this->serverDataDirectory . DS . $this->readServer($instanceId)['User']['username'] . DS . $instanceId . '\\Backup" /MIR');
+		exec('robocopy "' . $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . '\\Saves" "' . $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . '\\Backup" /MIR');
 		return $instanceId . ' is backed up.';
 	}
 
-	// TODO: Medieval Engineers
+	// Create binary for server instance
 	private function update($instanceId) {
-		// Delete server exe
-		exec('DEL "' . $this->serverBaseDirectory . DS . $this->serverBinariesDirectory . '\\DedicatedServer64\\' . $instanceId . '.exe"');
-		// Copy new server exe
-		exec('COPY "' . $this->serverBaseDirectory . DS . $this->serverBinariesDirectory . '\\DedicatedServer64\\SpaceEngineersDedicated.exe" "' . $this->serverBaseDirectory . DS . $this->serverBinariesDirectory . '\\DedicatedServer64\\' . $instanceId . '.exe"');
+		// Read instance
+		$instance = $this->readInstance($instanceId);
+		// Delete server instance exe
+		exec('DEL "' . $this->__getserverBinariesDirectory($instance['Instance']['game_id']) . '\\DedicatedServer64\\' . $instanceId . '.exe"');
+		// Copy new server instance exe
+		exec('COPY "' . $this->__getserverBinariesDirectory($instance['Instance']['game_id']) . '\\DedicatedServer64\\' . $this->__getGameDedicatedBinaryList()[$instance['Instance']['game_id']] . '" "' . $this->__getserverBinariesDirectory($instance['Instance']['game_id']) . '\\DedicatedServer64\\' . $instanceId . '.exe"');
 		return $instanceId . ' is updated.';
+	}
+	
+	private function __getGameDedicatedBinaryList() {
+		return Hash::extract($this->games, '{n}.dedicatedBinary');
 	}
 
 	private function processState($instanceId) {
@@ -390,16 +411,18 @@ class SEServerComponent extends Component {
 	}
 
 	private function getConfigPath($instanceId, $configType = 'server') {
+		// Read instance
+		$instance = $this->readInstance($instanceId);
 		// TODO: Use this everywhere, find where it is not being used
 		switch ($configType) {
 			case 'server':
-				$configPath = $this->serverDataDirectory . DS . $this->readServer($instanceId)['User']['username'] . DS . $instanceId . '\\SpaceEngineers-Dedicated.cfg';
+				$configPath = $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . '\\' . $this->__getGameConfigList()[$instance['Instance']['game_id']];
 				break;
 			case 'active_world':
-				$configPath = $this->serverDataDirectory . DS . $this->readServer($instanceId)['User']['username'] . DS . $instanceId . '\\Saves\\Active';
+				$configPath = $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . '\\Saves\\Active';
 				break;
 			case 'session':
-				$configPath = $this->serverDataDirectory . DS . $this->readServer($instanceId)['User']['username'] . DS . $instanceId . '\\Saves\\Active\\Sandbox.sbc';
+				$configPath = $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . '\\Saves\\Active\\Sandbox.sbc';
 				break;
 		}
 		return $configPath;
@@ -429,12 +452,12 @@ class SEServerComponent extends Component {
 		$configPath = $this->getConfigPath($instanceId);
 		// Delete current settings
 		unlink($configPath);
-		// Copy skeleton SpaceEngineers-Dedicated.cfg to instance
-		// TODO: Medieval Engineers
-		$source = $this->serverDataSkeletonDirectory . DS . 'SpaceEngineers-Dedicated.cfg';
-		copy($source, $configPath);
 		// Retrieve instance data
-		$instanceData = $this->readServer($instanceId);
+		$instanceData = $this->readInstance($instanceId);
+		$serverDataSkeletonDirectory = $this->__getServerDataSkeletonDirectory($instanceData['Instance']['game_id']);
+		// Copy skeleton cfg to instance
+		$source = $serverDataSkeletonDirectory . DS . $this->__getGameConfigList()[$instanceData['Instance']['game_id']];
+		copy($source, $configPath);
 		// Refresh mods list
 		$this->__refreshMods($instanceId, $instanceData['Instance']['mods']);
 		// Merge config from instance_type, instance_profile and instance
@@ -448,12 +471,16 @@ class SEServerComponent extends Component {
 		$configProfile['load_world'] = $this->getConfigPath($instanceId, 'active_world');
 		// Parse server admins field
 		$configProfile['server_admins'] = $this->__parseServerAdmins($configProfile['server_admins']);
-		// Inject config into SpaceEngineers-Dedicated.cfg
+		// Inject config into cfg
 		$this->__injectConfig($instanceId, $configProfile);
 		// Delete session settings from world save
 		$this->__deleteSandboxSettings($instanceId);
 		// Set session settings into world save
 		$this->__setSandboxSettings($instanceId);
+	}
+	
+	private function __getGameConfigList() {
+		return Hash::extract($this->games, '{n}.config');
 	}
 
 	// This function strips values from an array and fixes the data to be compatible with the configuration template
@@ -598,17 +625,17 @@ class SEServerComponent extends Component {
 
 	private function __verifyInstanceExistence($instanceId, $spawn = true, $cycle = true, $create = true) {
 		$instanceCreated = false;
-		$userDirExists = file_exists($this->serverDataDirectory . DS . $this->readServer($instanceId)['User']['username']);
-		$instanceDirExists = file_exists($this->serverDataDirectory . DS . $this->readServer($instanceId)['User']['username'] . DS . $instanceId);
+		$userDirExists = file_exists($this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username']);
+		$instanceDirExists = file_exists($this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId);
 		// Check if user dir exists
 		if ($create && !$userDirExists) {
 			// create user dir
-			$userDirExists = mkdir($this->serverDataDirectory . DS . $this->readServer($instanceId)['User']['username']);
+			$userDirExists = mkdir($this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username']);
 		}
 		// Check if instance dir exists
 		if ($create && !$instanceDirExists) {
 			// create user dir
-			$instanceCreated = $instanceDirExists = mkdir($this->serverDataDirectory . DS . $this->readServer($instanceId)['User']['username'] . DS . $instanceId);
+			$instanceCreated = $instanceDirExists = mkdir($this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId);
 		}
 		if ($spawn && $instanceCreated) {
 			return $this->spawn($instanceId, $cycle);
@@ -656,15 +683,13 @@ class SEServerComponent extends Component {
 			return 'Instance not found';
 		}
 		$this->__verifyInstanceExistence($instanceId, false, false, true);
-		$instance = $this->readServer($instanceId);
+		$instance = $this->readInstance($instanceId);
 		// TODO: Error checking
 		// Set port
 		$instance['Instance']['port'] = $this->__getOpenPort();
-		// TODO: Medieval Engineers
-		// TODO: Make function to get Skel dir
-		$source = $this->serverDataSkeletonDirectory;
-		$destination = $this->serverDataDirectory . DS . $this->readServer($instanceId)['User']['username'] . DS . $instanceId;
-		$this->__copyDir($source, $destination);
+		$serverDataSkeletonDirectory = $this->__getServerDataSkeletonDirectory($instance['Instance']['game_id']);
+		$destination = $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId;
+		$this->__copyDir($serverDataSkeletonDirectory, $destination);
 		$configurations = array_merge($this->InstanceType->findById($instance['Instance']['instance_type_id'])['InstanceType'], array(
 			'server_port' => $instance['Instance']['port'],
 			'server_name' => $instance['Instance']['name'],
@@ -689,6 +714,14 @@ class SEServerComponent extends Component {
 			}
 		}
 		return 'Instance creation failed';
+	}
+	
+	private function __getserverDataSkeletonDirectory($gameId) {
+		return $this->serverDataSkeletonDirectory . DS . $this->__getGameFolderList()[$gameId];
+	}
+	
+	private function __getGameFolderList() {
+		return Hash::extract($this->games, '{n}.folder');
 	}
 
 	private function __getOpenPort() {
@@ -730,7 +763,8 @@ class SEServerComponent extends Component {
 
 	private function __injectConfig($instanceId, $configurations) {
 		$configValues = $this->__buildConfigKeys($configurations);
-		$configPath = $this->serverDataDirectory . DS . $this->readServer($instanceId)['User']['username'] . DS . $instanceId . DS . 'SpaceEngineers-Dedicated.cfg';
+		$instance = $this->readInstance($instanceId);
+		$configPath = $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . DS . $this->__getGameConfigList()[$instance['Instance']['game_id']];
 		$config = str_replace(array_keys($configValues), $configValues, file_get_contents($configPath));
 		return file_put_contents($configPath, $config);
 	}
@@ -749,12 +783,12 @@ class SEServerComponent extends Component {
 	}
 
 	private function __sendInstanceCreationMail($instanceId) {
-		$instance = $this->readServer($instanceId);
+		$instance = $this->readInstance($instanceId);
 		if (!isset($instance['Instance']['user_id'])) {
 			return;
 		}
 		$user = $this->readUser($instance['Instance']['user_id']);
-		$email = new CakeEmail('mandrill');
+		$email = new CakeEmail('default');
 		$email->to($user['User']['email']);
 		$email->subject(Configure::read(APP_CONFIG_SCOPE . '.Email.newInstanceSubject'));
 		$email->template('new-instance');
@@ -763,11 +797,18 @@ class SEServerComponent extends Component {
 		$email->addHeaders(array(
 			'tags' => array(Configure::read(APP_CONFIG_SCOPE . '.App.environment') . '-new-instance-email'),
 		));
-		$email->send();
+		if (Configure::read(APP_CONFIG_SCOPE . '.App.emailEnabled')) {
+			$email->send();
+		} else {
+			debug('E-mail suppressed because e-mail is disabled.');
+		}
 	}
 
-	private function readServer($instanceId) {
-		return $this->Instance->findById($instanceId);
+	private function readInstance($instanceId) {
+		if (empty($this->__instance)) {
+			$this->__instance = $this->Instance->findById($instanceId);
+		}
+		return $this->__instance;
 	}
 
 	private function readUser($userId) {
@@ -775,7 +816,7 @@ class SEServerComponent extends Component {
 	}
 
 	private function getLogs($instanceId) {
-		$logPath = $this->serverDataDirectory . DS . $this->readServer($instanceId)['User']['username'] . DS . $instanceId;
+		$logPath = $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId;
 
 		// Find all log files
 		$logFiles = glob($logPath . DS . "*.log");
@@ -850,15 +891,15 @@ class SEServerComponent extends Component {
 		// Check ownership if not admin/support
 		if (AuthComponent::user('role_id') && AuthComponent::user('role_id') > 2) {
 			// Todo: retrieve just the user_id field
-			$server = $this->readServer($instanceId);
-			if ($server['Instance']['user_id'] == AuthComponent::user('id')) {
+			$instance = $this->readInstance($instanceId);
+			if ($instance['Instance']['user_id'] == AuthComponent::user('id')) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private function __setServerList() {
+	private function __setInstanceList() {
 		if (empty($this->instances)) {
 			$this->instances = $this->Instance->find('list', array(
 				'conditions' => array(

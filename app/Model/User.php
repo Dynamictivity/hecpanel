@@ -263,7 +263,7 @@ class User extends AppModel {
 
     private function __sendResetMail() {
         $user = $this->read();
-        $email = new CakeEmail('mandrill');
+        $email = new CakeEmail('default');
         $email->to($user['User']['email']);
         $email->subject(Configure::read(APP_CONFIG_SCOPE . '.Email.resetAccountSubject'));
         $email->template('reset-account');
@@ -271,7 +271,12 @@ class User extends AppModel {
         $email->addHeaders(array(
             'tags' => array(Configure::read(APP_CONFIG_SCOPE . '.App.environment') . '-reset-account-email'),
         ));
-        return $email->send()[0]['status'];
+		if (Configure::read(APP_CONFIG_SCOPE . '.App.emailEnabled')) {
+			return $email->send()[0]['status'];
+		} else {
+			debug('E-mail suppressed because e-mail is disabled.');
+			return true;
+		}
     }
 
     public function afterSave($created, $options = array()) {
@@ -288,7 +293,7 @@ class User extends AppModel {
         if (!isset($this->data['User']['email'])) {
             return;
         }
-        $email = new CakeEmail('mandrill');
+        $email = new CakeEmail('default');
         $email->to($this->data['User']['email']);
         $email->subject(Configure::read(APP_CONFIG_SCOPE . '.Email.newAccountSubject'));
         $email->template('new-account');
@@ -297,7 +302,11 @@ class User extends AppModel {
         $email->addHeaders(array(
             'tags' => array(Configure::read(APP_CONFIG_SCOPE . '.App.environment') . '-new-account-email'),
         ));
-        $email->send();
+		if (Configure::read(APP_CONFIG_SCOPE . '.App.emailEnabled')) {
+			$email->send();
+		} else {
+			debug('E-mail suppressed because e-mail is disabled.');
+		}
     }
 
     public function acceptEula() {

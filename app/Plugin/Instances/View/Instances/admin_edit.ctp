@@ -32,6 +32,7 @@ echo $this->Form->create('Instance', array(
 	echo $this->Form->input('server_admins');
 	echo $this->Form->input('mods');
 	echo $this->Form->input('user_id');
+	//echo $this->Form->input('game_id');
 	echo $this->Form->input('host_server_id');
 	echo $this->Form->input('instance_type_id');
 	echo $this->Form->input('instance_profile_id');

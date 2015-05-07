@@ -139,7 +139,8 @@ class InstancesController extends InstancesAppController {
         $users = $this->Instance->User->find('list');
         $hostServers = $this->Instance->HostServer->find('list');
         $instanceTypes = $this->Instance->InstanceType->find('list');
-        $this->set(compact('users', 'hostServers', 'instanceTypes'));
+		$games = $this->SEServer->getGameList();
+        $this->set(compact('users', 'hostServers', 'instanceTypes', 'games'));
     }
 
     private function __createInstance() {
@@ -223,7 +224,8 @@ class InstancesController extends InstancesAppController {
         $hostServers = $this->Instance->HostServer->find('list');
         $instanceProfiles = $this->Instance->InstanceProfile->find('list');
         $instanceTypes = $this->Instance->InstanceType->find('list');
-        $this->set(compact('users', 'hostServers', 'instanceProfiles', 'instanceTypes'));
+		$games = $this->SEServer->getGameList();
+        $this->set(compact('users', 'hostServers', 'instanceProfiles', 'instanceTypes', 'games'));
     }
 
     /**
