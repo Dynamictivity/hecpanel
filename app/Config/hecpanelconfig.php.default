@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  HE cPanel -- Hosting Engineers Control Panel
  *  Copyright (C) 2015  Dynamictivity LLC (http://www.hecpanel.com)
@@ -60,7 +61,8 @@ $config = array(
 
 /**
  * LDAP Settings
- *
+ * This feature is implemented in an extremely basic form ATM
+ * TODO: Robustify
  */
 $config['LDAP']['Db']['Config'] = 'ldap'; //What is the name of the db config that has the LDAP credentials
 $config['LDAP']['User']['Identifier'] = 'uid'; //What is the LDAP attribute that identifies the username attribute,

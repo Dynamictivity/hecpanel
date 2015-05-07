@@ -106,8 +106,139 @@ $Configuration->load('App');
 
 Configure::load('hecpanelconfig');
 Configure::write(APP_CONFIG_SCOPE . '.App.apiVersion', 'v1');
+// TODO: Move to config file in Instances plugin
+Configure::write(APP_CONFIG_SCOPE . '.Instances.games', array(
+	'1' => array(
+		'name' => 'Space Engineers',
+		'folder' => 'SPACE_ENGINEERS',
+		'config' => 'SpaceEngineers-Dedicated.cfg',
+		'configOptions' => array(
+			'SessionSettings' => array(
+				'gameModes' => array(
+					'Survival' => 'Survival',
+					'Creative' => 'Creative'
+				),
+				'onlineModes' => array(
+					'PUBLIC' => 'PUBLIC',
+					'PRIVATE' => 'PRIVATE'
+				),
+				'environmentHostilities' => array(
+					'SAFE' => 'SAFE',
+					'NORMAL' => 'NORMAL',
+					'CATACLYSM' => 'CATACLYSM',
+					'CATACLYSM_UNREAL' => 'CATACLYSM_UNREAL'
+				),
+				'autoHealings' => array(
+					'true' => 'true',
+					'false' => 'false'
+				),
+				'enableCopyPastes' => array(
+					'true' => 'true',
+					'false' => 'false'
+				),
+				'autoSaves' => array(
+					'true' => 'true',
+					'false' => 'false'
+				),
+				'weaponsEnableds' => array(
+					'true' => 'true',
+					'false' => 'false'
+				),
+				'showPlayerNamesOnHuds' => array(
+					'true' => 'true',
+					'false' => 'false'
+				),
+				'thrusterDamages' => array(
+					'true' => 'true',
+					'false' => 'false'
+				),
+				'cargoShipsEnableds' => array(
+					'true' => 'true',
+					'false' => 'false'
+				),
+				'enableSpectators' => array(
+					'true' => 'true',
+					'false' => 'false'
+				),
+				'removeTrashes' => array(
+					'true' => 'true',
+					'false' => 'false'
+				),
+				'respawnShipDeletes' => array(
+					'true' => 'true',
+					'false' => 'false'
+				),
+				'resetOwnerships' => array(
+					'true' => 'true',
+					'false' => 'false'
+				),
+				'realisticSounds' => array(
+					'true' => 'true',
+					'false' => 'false'
+				),
+				'clientCanSaves' => array(
+					'true' => 'true',
+					'false' => 'false'
+				),
+				'permanentDeaths' => array(
+					'true' => 'true',
+					'false' => 'false'
+				),
+				'pauseGameWhenEmpties' => array(
+					'true' => 'true',
+					'false' => 'false'
+				),
+				'ignoreLastSessions' => array(
+					'true' => 'true',
+					'false' => 'false'
+				),
+				'destructibleBlocks' => array(
+					'true' => 'true',
+					'false' => 'false'
+				),
+				'enableIngameScripts' => array(
+					'true' => 'true',
+					'false' => 'false'
+				),
+				'enableOxygens' => array(
+					'true' => 'true',
+					'false' => 'false'
+				),
+				'scenarioSubtypes' => array(
+					'EasyStart1' => 'EasyStart1',
+					'EasyStart2' => 'EasyStart2',
+					'Survival' => 'Survival',
+					'CrashedRedShip' => 'CrashedRedShip',
+					'TwoPlatforms' => 'TwoPlatforms',
+					'Asteroids' => 'Asteroids',
+					'EmptyWorld' => 'EmptyWorld'
+				),
+				'inventorySizeMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
+				'assemblerSpeedMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
+				'assemblerEfficiencyMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
+				'refinerySpeedMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
+				'maxPlayers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
+				'maxFloatingObjects' => array_combine(range(0, 500, 1), range(0, 500, 1)), // 0-500, increment of 1
+				'worldSizeKms' => array_combine(range(0, 500, 1), range(0, 500, 1)), // 0-500, increment of 1
+				'welderSpeedMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
+				'grinderSpeedMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
+				'hackSpeedMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
+				'autoSaveInMinutes' => array_combine(range(15, 90, 15), range(15, 90, 15)), // 15-90, increment of 15
+				'spawnShipTimeMultipliers' => array_combine(range(0, 20, 1), range(0, 20, 1)), // 0-20, increment of 1
+				'asteroidAmounts' => array_combine(range(0, 10, 1), range(0, 10, 1)), // 0-10, increment of 1
+				'proceduralDensities' => array_combine(range(0, 1, .05), range(0, 1, .05)), // 0-1, increment of .05
+				'viewDistances' => array_combine(range(1000, 30000, 1000), range(1000, 30000, 1000)), // 1000-30000, increment of 1000
+			),
+		)
+	),
+	'2' => array(
+		'name' => 'Medieval Engineers',
+		'folder' => 'MEDIEVAL_ENGINEERS',
+		'config' => 'MedievalEngineers-Dedicated.cfg',
+	),
+));
+			
 Configure::write(APP_CONFIG_SCOPE . '.Instances.serverArchiveDirectory', 'SERVER_ARCHIVES');
-Configure::write(APP_CONFIG_SCOPE . '.Instances.serverScriptsDirectory', 'SERVER_SCRIPTS');
 Configure::write(APP_CONFIG_SCOPE . '.Instances.serverBinariesDirectory', 'SERVER_BINARIES');
 
 Configure::write('Bootstrap.formButtonStyle', array(

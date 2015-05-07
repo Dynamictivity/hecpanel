@@ -1,0 +1,1 @@
+ALTER TABLE `instances` ADD `game_id` INT NOT NULL AFTER `host_server_id`;
