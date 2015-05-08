@@ -2,7 +2,7 @@
 title: HEcPanel
 email: support@dynamictivity.com
 url: https://dynamictivity.github.io/hecpanel
-description: "HECPanel (Hosted Engineers Control Panel)  The ultimate hosting solution for Keen software's titles: Space Engineers, and Medieval Engineers"
+description: "HEcPanel (Hosted Engineers Control Panel)  The ultimate hosting solution for Keen software's titles: Space Engineers, and Medieval Engineers"
 
 # Color settings (hex-codes without the leading hash-tag)
 color:
@@ -10,7 +10,7 @@ color:
   links: '#219ab3'
 
 # Footer settings
-footer: HEcPanel
+footer: Dynamictivity
 
 # Social networks usernames (many more available: google-plus, flickr, dribbble, pinterest, instagram, tumblr, linkedin, etc.)
 social:
