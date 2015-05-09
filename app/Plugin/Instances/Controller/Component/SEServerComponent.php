@@ -64,112 +64,7 @@ class SEServerComponent extends Component {
 	private $hostServer = array();
 	// Cached instance
 	private $__instance = array();
-	// Configuration options for form
-	// TODO: Medieval Engineers
-	public $configOptions = array(
-		'SessionSettings' => array(
-			'gameModes' => array(
-				'Survival' => 'Survival',
-				'Creative' => 'Creative'
-			),
-			'onlineModes' => array(
-				'PUBLIC' => 'PUBLIC',
-				'PRIVATE' => 'PRIVATE'
-			),
-			'environmentHostilities' => array(
-				'SAFE' => 'SAFE',
-				'NORMAL' => 'NORMAL',
-				'CATACLYSM' => 'CATACLYSM',
-				'CATACLYSM_UNREAL' => 'CATACLYSM_UNREAL'
-			),
-			'autoHealings' => array(
-				'true' => 'true',
-				'false' => 'false'
-			),
-			'enableCopyPastes' => array(
-				'true' => 'true',
-				'false' => 'false'
-			),
-			'autoSaves' => array(
-				'true' => 'true',
-				'false' => 'false'
-			),
-			'weaponsEnableds' => array(
-				'true' => 'true',
-				'false' => 'false'
-			),
-			'showPlayerNamesOnHuds' => array(
-				'true' => 'true',
-				'false' => 'false'
-			),
-			'thrusterDamages' => array(
-				'true' => 'true',
-				'false' => 'false'
-			),
-			'cargoShipsEnableds' => array(
-				'true' => 'true',
-				'false' => 'false'
-			),
-			'enableSpectators' => array(
-				'true' => 'true',
-				'false' => 'false'
-			),
-			'removeTrashes' => array(
-				'true' => 'true',
-				'false' => 'false'
-			),
-			'respawnShipDeletes' => array(
-				'true' => 'true',
-				'false' => 'false'
-			),
-			'resetOwnerships' => array(
-				'true' => 'true',
-				'false' => 'false'
-			),
-			'realisticSounds' => array(
-				'true' => 'true',
-				'false' => 'false'
-			),
-			'clientCanSaves' => array(
-				'true' => 'true',
-				'false' => 'false'
-			),
-			'permanentDeaths' => array(
-				'true' => 'true',
-				'false' => 'false'
-			),
-			'pauseGameWhenEmpties' => array(
-				'true' => 'true',
-				'false' => 'false'
-			),
-			'ignoreLastSessions' => array(
-				'true' => 'true',
-				'false' => 'false'
-			),
-			'destructibleBlocks' => array(
-				'true' => 'true',
-				'false' => 'false'
-			),
-			'enableIngameScripts' => array(
-				'true' => 'true',
-				'false' => 'false'
-			),
-			'enableOxygens' => array(
-				'true' => 'true',
-				'false' => 'false'
-			),
-			'scenarioSubtypes' => array(
-				'EasyStart1' => 'EasyStart1',
-				'EasyStart2' => 'EasyStart2',
-				'Survival' => 'Survival',
-				'CrashedRedShip' => 'CrashedRedShip',
-				'TwoPlatforms' => 'TwoPlatforms',
-				'Asteroids' => 'Asteroids',
-				'EmptyWorld' => 'EmptyWorld'
-			),
-		),
-	);
-	// Command options for form
+	// Command options for Command Queue form
 	public $remoteCommands = array(
 		'commands' => array(
 			'backupAll' => '[backupAll] Backup all server instances',
@@ -243,36 +138,11 @@ class SEServerComponent extends Component {
 		$this->Http = new HttpSocket();
 	}
 
-	public function getConfigOptions($key) {
-		$options = array();
-		// TODO: Medieval Engineers
-		if (!empty($this->configOptions[$key])) {
-			$options = $this->configOptions[$key];
-			$zeroToOne = array_combine(range(0, 1, .05), range(0, 1, .05));
-			$zeroToTen = array_combine(range(0, 10, 1), range(0, 10, 1));
-			$zeroToTwenty = array_combine(range(0, 20, 1), range(0, 20, 1));
-			//$oneToFifty = array_combine(range(1, 50, 1), range(1, 50, 1));
-			$fifteenToNinety = array_combine(range(15, 90, 15), range(15, 90, 15));
-			$oneToOneHundred = array_combine(range(1, 100, 1), range(1, 100, 1));
-			$oneThousandToThirtyThousand = array_combine(range(1000, 30000, 1000), range(1000, 30000, 1000));
-			$zeroToFiveHundred = array_combine(range(0, 500, 1), range(0, 500, 1));
-			$options['inventorySizeMultipliers'] = $oneToOneHundred;
-			$options['assemblerSpeedMultipliers'] = $oneToOneHundred;
-			$options['assemblerEfficiencyMultipliers'] = $oneToOneHundred;
-			$options['refinerySpeedMultipliers'] = $oneToOneHundred;
-			$options['maxPlayers'] = $oneToOneHundred;
-			$options['maxFloatingObjects'] = $zeroToFiveHundred;
-			$options['worldSizeKms'] = $zeroToFiveHundred;
-			$options['welderSpeedMultipliers'] = $oneToOneHundred;
-			$options['grinderSpeedMultipliers'] = $oneToOneHundred;
-			$options['hackSpeedMultipliers'] = $oneToOneHundred;
-			$options['autoSaveInMinutes'] = $fifteenToNinety;
-			$options['spawnShipTimeMultipliers'] = $zeroToTwenty;
-			$options['asteroidAmounts'] = $zeroToTen;
-			$options['proceduralDensities'] = $zeroToOne;
-			$options['viewDistances'] = $oneThousandToThirtyThousand;
+	public function getConfigOptions($gameId, $key) {
+		$configOptions =$this->games[$gameId]['configOptions'][$key];
+		if (!empty($configOptions)) {
+			return $configOptions;
 		}
-		return $options;
 	}
 	
 	public function getGameList() {

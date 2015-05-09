@@ -222,6 +222,7 @@ class InstancesController extends InstancesAppController {
         }
         $users = $this->Instance->User->find('list');
         $hostServers = $this->Instance->HostServer->find('list');
+		// Todo: Only show instance profiles available to the instance (owned by same user/group)
         $instanceProfiles = $this->Instance->InstanceProfile->find('list');
         $instanceTypes = $this->Instance->InstanceType->find('list');
 		$games = $this->SEServer->getGameList();

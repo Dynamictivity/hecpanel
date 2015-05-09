@@ -71,7 +71,9 @@ class InstanceProfilesController extends InstancesAppController {
             }
         }
         // Set form configuration options
-        $this->set($this->SEServer->getConfigOptions('SessionSettings'));
+		// TODO: Create URL variable for game
+		$gameId = 0;
+        $this->set($this->SEServer->getConfigOptions($gameId, 'SessionSettings'));
     }
 
     public function duplicate($id = null) {
@@ -125,7 +127,9 @@ class InstanceProfilesController extends InstancesAppController {
             $this->request->data = $this->InstanceProfile->find('first', $options);
         }
         // Set form configuration options
-        $this->set($this->SEServer->getConfigOptions('SessionSettings'));
+		// TODO: Create URL variable for game
+		$gameId = 0;
+        $this->set($this->SEServer->getConfigOptions($gameId, 'SessionSettings'));
     }
 
     /**

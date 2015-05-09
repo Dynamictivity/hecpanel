@@ -65,7 +65,9 @@ class InstanceTypesController extends InstancesAppController {
             }
         }
         // Set form configuration options
-        $this->set($this->SEServer->getConfigOptions('SessionSettings'));
+		// TODO: Create URL variable for game
+		$gameId = 0;
+        $this->set($this->SEServer->getConfigOptions($gameId, 'SessionSettings'));
     }
 
     public function admin_duplicate($id = null) {
@@ -112,7 +114,9 @@ class InstanceTypesController extends InstancesAppController {
             $this->request->data = $this->InstanceType->find('first', $options);
         }
         // Set form configuration options
-        $this->set($this->SEServer->getConfigOptions('SessionSettings'));
+		// TODO: Create URL variable for game
+		$gameId = 0;
+        $this->set($this->SEServer->getConfigOptions($gameId, 'SessionSettings'));
     }
 
     /**
