@@ -1,5 +1,8 @@
 ALTER TABLE `instances` ADD `game_id` INT NOT NULL AFTER `host_server_id`;
 ALTER TABLE `instance_profiles` ADD `profile_settings` TEXT NOT NULL AFTER `user_id`;
+ALTER TABLE `instance_types` ADD `profile_settings` TEXT NOT NULL AFTER `name`;
+ALTER TABLE `instance_profiles` ADD `game_id` INT NOT NULL AFTER `user_id`;
+ALTER TABLE `instance_types` ADD `game_id` INT NOT NULL AFTER `name`;
 
 /* Run this after conversion */
 ALTER TABLE `instance_profiles`
@@ -37,3 +40,44 @@ ALTER TABLE `instance_profiles`
   DROP `enable_oxygen`,
   DROP `view_distance`,
   DROP `scenario_subtype_id`;
+
+ALTER TABLE `instance_types`
+  DROP `game_mode`,
+  DROP `inventory_size_multiplier`,
+  DROP `assembler_speed_multiplier`,
+  DROP `assembler_efficiency_multiplier`,
+  DROP `refinery_speed_multiplier`,
+  DROP `online_mode`,
+  DROP `max_players`,
+  DROP `max_floating_objects`,
+  DROP `environment_hostility`,
+  DROP `auto_healing`,
+  DROP `enable_copy_paste`,
+  DROP `auto_save`,
+  DROP `weapons_enabled`,
+  DROP `show_player_names_on_hud`,
+  DROP `thruster_damage`,
+  DROP `cargo_ships_enabled`,
+  DROP `enable_spectator`,
+  DROP `remove_trash`,
+  DROP `world_size_km`,
+  DROP `respawn_ship_delete`,
+  DROP `reset_ownership`,
+  DROP `welder_speed_multiplier`,
+  DROP `grinder_speed_multiplier`,
+  DROP `realistic_sound`,
+  DROP `client_can_save`,
+  DROP `hack_speed_multiplier`,
+  DROP `permanent_death`,
+  DROP `auto_save_in_minutes`,
+  DROP `spawn_ship_time_multiplier`,
+  DROP `procedural_density`,
+  DROP `procedural_seed`,
+  DROP `destructible_blocks`,
+  DROP `enable_ingame_scripts`,
+  DROP `enable_oxygen`,
+  DROP `view_distance`,
+  DROP `scenario_subtype_id`,
+  DROP `asteroid_amount`,
+  DROP `pause_game_when_empty`,
+  DROP `ignore_last_session`;

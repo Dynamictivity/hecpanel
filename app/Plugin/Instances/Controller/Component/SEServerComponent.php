@@ -139,12 +139,12 @@ class SEServerComponent extends Component {
 	}
 
 	public function getConfigOptions($gameId, $key) {
-		$configOptions =$this->games[$gameId]['configOptions'][$key];
+		$configOptions = $this->games[$gameId]['configOptions'][$key];
 		if (!empty($configOptions)) {
 			return $configOptions;
 		}
 	}
-	
+
 	public function getGameList() {
 		return Hash::extract($this->games, '{n}.name');
 	}
@@ -191,7 +191,7 @@ class SEServerComponent extends Component {
 		exec('start /d "' . $this->__getserverBinariesDirectory($instance['Instance']['game_id']) . DS . 'DedicatedServer64" ' . $instanceId . '.exe -noconsole -path "' . $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . DS . '"');
 		return $instanceId . ' is starting up';
 	}
-	
+
 	private function __getserverBinariesDirectory($gameId) {
 		return $this->serverBinariesDirectory . DS . $this->__getGameFolderList()[$gameId];
 	}
@@ -252,7 +252,7 @@ class SEServerComponent extends Component {
 		exec('COPY "' . $this->__getserverBinariesDirectory($instance['Instance']['game_id']) . '\\DedicatedServer64\\' . $this->__getGameDedicatedBinaryList()[$instance['Instance']['game_id']] . '" "' . $this->__getserverBinariesDirectory($instance['Instance']['game_id']) . '\\DedicatedServer64\\' . $instanceId . '.exe"');
 		return $instanceId . ' is updated.';
 	}
-	
+
 	private function __getGameDedicatedBinaryList() {
 		return Hash::extract($this->games, '{n}.dedicatedBinary');
 	}
@@ -323,7 +323,7 @@ class SEServerComponent extends Component {
 		// Delete current settings
 		unlink($configPath);
 		// Retrieve instance data
-		$instanceData = $this->readInstance($instanceId);
+		$instanceData = $this->readInstance($instanceId, true);
 		$serverDataSkeletonDirectory = $this->__getServerDataSkeletonDirectory($instanceData['Instance']['game_id']);
 		// Copy skeleton cfg to instance
 		$source = $serverDataSkeletonDirectory . DS . $this->__getGameConfigList()[$instanceData['Instance']['game_id']];
@@ -331,9 +331,10 @@ class SEServerComponent extends Component {
 		// Refresh mods list
 		$this->__refreshMods($instanceId, $instanceData['Instance']['mods']);
 		// Merge config from instance_type, instance_profile and instance
+		$instanceProfile = $this->InstanceProfile->findById($instanceData['Instance']['instance_profile_id'])['InstanceProfile']['profile_settings'];
+		$instanceType = $this->InstanceType->findById($instanceData['Instance']['instance_type_id'])['InstanceType']['profile_settings'];
 		$instance = $this->__stripValues($instanceData['Instance'], array('id', 'created', 'updated', 'user_id', 'instance_profile_id', 'instance_type_id'));
-		$instanceType = $this->__stripValues($instanceData['InstanceType'], array('id', 'name', 'created', 'updated'));
-		$instanceProfile = $this->__stripValues($instanceData['InstanceProfile'], array('id', 'name', 'user_id', 'created', 'updated'));
+		//$instanceProfile = $this->__stripValues($instanceData['InstanceProfile']['profile_settings']);
 		$configProfile = array_merge(
 				$instanceType, $instanceProfile, $instance
 		);
@@ -348,7 +349,7 @@ class SEServerComponent extends Component {
 		// Set session settings into world save
 		$this->__setSandboxSettings($instanceId);
 	}
-	
+
 	private function __getGameConfigList() {
 		return Hash::extract($this->games, '{n}.config');
 	}
@@ -560,7 +561,7 @@ class SEServerComponent extends Component {
 		$serverDataSkeletonDirectory = $this->__getServerDataSkeletonDirectory($instance['Instance']['game_id']);
 		$destination = $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId;
 		$this->__copyDir($serverDataSkeletonDirectory, $destination);
-		$configurations = array_merge($this->InstanceType->findById($instance['Instance']['instance_type_id'])['InstanceType'], array(
+		$configurations = array_merge($this->InstanceType->findById($instance['Instance']['instance_type_id'])['InstanceType']['profile_settings'], array(
 			'server_port' => $instance['Instance']['port'],
 			'server_name' => $instance['Instance']['name'],
 			'world_name' => 'Active',
@@ -568,28 +569,29 @@ class SEServerComponent extends Component {
 			'load_world' => $destination . DS . 'Saves' . DS . 'Active'
 		));
 		$this->__injectConfig($instanceId, $configurations);
-		$instanceProfile['InstanceProfile'] = array_merge($configurations, array(
+		$instanceProfile['InstanceProfile'] = array(
 			'name' => $instance['Instance']['name'],
 			'user_id' => $instance['Instance']['user_id']
-		));
-		$this->InstanceProfile->create($instanceProfile, true, array_keys($this->Instance->schema()));
+		);
+		$instanceProfile['InstanceProfile']['profile_settings'] = $configurations;
+		$this->InstanceProfile->create($instanceProfile);
 		if ($this->InstanceProfile->save()) {
 			$instance['Instance']['instance_profile_id'] = $this->InstanceProfile->id;
 			if ($this->Instance->save($instance)) {
 				$this->__sendInstanceCreationMail($instanceId);
 				if ($cycle) {
-					return $this->server('cycle', $instanceId, true, false);
+					return $this->server('cycle', $instanceId);
 				}
 				return 'Instance spawned successfully.';
 			}
 		}
 		return 'Instance creation failed';
 	}
-	
+
 	private function __getserverDataSkeletonDirectory($gameId) {
 		return $this->serverDataSkeletonDirectory . DS . $this->__getGameFolderList()[$gameId];
 	}
-	
+
 	private function __getGameFolderList() {
 		return Hash::extract($this->games, '{n}.folder');
 	}
@@ -640,7 +642,7 @@ class SEServerComponent extends Component {
 	}
 
 	/*
-	 * I have no fucking clue what kind of sorcery I performed here
+	 * This method wraps all of the array_keys with {}
 	 */
 
 	private function __buildConfigKeys($config) {
@@ -674,8 +676,8 @@ class SEServerComponent extends Component {
 		}
 	}
 
-	private function readInstance($instanceId) {
-		if (empty($this->__instance)) {
+	private function readInstance($instanceId, $refresh = false) {
+		if (empty($this->__instance) || $refresh) {
 			$this->__instance = $this->Instance->findById($instanceId);
 		}
 		return $this->__instance;

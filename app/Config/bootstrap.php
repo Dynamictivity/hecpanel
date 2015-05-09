@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  HE cPanel -- Hosting Engineers Control Panel
  *  Copyright (C) 2015  Dynamictivity LLC (http://www.hecpanel.com)
@@ -16,7 +17,6 @@
  *   You should have received a copy of the GNU Affero General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 /**
  * This file is loaded automatically by the app/webroot/index.php file after core.php
  *
@@ -88,8 +88,8 @@ Cache::config('default', array('engine' => 'File'));
  * ));
  */
 Configure::write('Dispatcher.filters', array(
-    'AssetDispatcher',
-    'CacheDispatcher'
+	'AssetDispatcher',
+	'CacheDispatcher'
 ));
 
 // Load plugins
@@ -247,8 +247,8 @@ Configure::write(APP_CONFIG_SCOPE . '.Instances.serverBinariesDirectory', 'SERVE
 Configure::write(APP_CONFIG_SCOPE . '.Instances.serverDataSkeletonDirectory', 'SERVER_SKELETON');
 
 Configure::write('Bootstrap.formButtonStyle', array(
-    'div' => 'col col-md-9 col-md-offset-3',
-    'class' => 'btn btn-default'
+	'div' => 'col col-md-9 col-md-offset-3',
+	'class' => 'btn btn-default'
 ));
 
 /**
@@ -256,65 +256,72 @@ Configure::write('Bootstrap.formButtonStyle', array(
  */
 App::uses('CakeLog', 'Log');
 CakeLog::config('debug', array(
-    'engine' => 'File',
-    'types' => array('notice', 'info', 'debug'),
-    'file' => 'debug',
+	'engine' => 'File',
+	'types' => array('notice', 'info', 'debug'),
+	'file' => 'debug',
 ));
 CakeLog::config('error', array(
-    'engine' => 'File',
-    'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
-    'file' => 'error',
+	'engine' => 'File',
+	'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
+	'file' => 'error',
 ));
 
 class QuickGit {
 
-    public static function version() {
-        @exec('git describe --always', $version_mini_hash);
-        @exec('git rev-list HEAD | wc -l', $version_number);
-        @exec('git log -1', $line);
-        @$version['short'] = "v1." . trim($version_number[0]) . "." . $version_mini_hash[0];
-        @$version['full'] = "v1." . trim($version_number[0]) . ".$version_mini_hash[0] (" . str_replace('commit ', '', $line[0]) . ")";
-        @$version['mini'] = "v" . $version_mini_hash[0];
-        return $version;
-    }
+	public static function version() {
+		@exec('git describe --always', $version_mini_hash);
+		@exec('git rev-list HEAD | wc -l', $version_number);
+		@exec('git log -1', $line);
+		@$version['short'] = "v1." . trim($version_number[0]) . "." . $version_mini_hash[0];
+		@$version['full'] = "v1." . trim($version_number[0]) . ".$version_mini_hash[0] (" . str_replace('commit ', '', $line[0]) . ")";
+		@$version['mini'] = "v" . $version_mini_hash[0];
+		return $version;
+	}
 
 }
 
 $git = new QuickGit();
 define('APP_GIT_VERSION', $git->version()['mini']);
 
+function strip_keys($array, $keys) {
+	foreach ($keys as $key) {
+		unset($array[$key]);
+	}
+	return $array;
+}
+
 // hour cache file storage
 Cache::config('hour', array(
-    'engine' => 'File',
-    'duration' => '+1 hours',
-    'probability' => 100,
-    'path' => CACHE . 'hour' . DS,
+	'engine' => 'File',
+	'duration' => '+1 hours',
+	'probability' => 100,
+	'path' => CACHE . 'hour' . DS,
 ));
 
 define('APP_SERVER_NAME', strtolower(gethostname()));
 
 // day cache file storage
 Cache::config('day', array(
-    'engine' => 'File',
-    'duration' => '+1 day',
-    'probability' => 100,
-    'path' => CACHE . 'day' . DS,
+	'engine' => 'File',
+	'duration' => '+1 day',
+	'probability' => 100,
+	'path' => CACHE . 'day' . DS,
 ));
 
 // week cache file storage
 Cache::config('week', array(
-    'engine' => 'File',
-    'duration' => '+1 week',
-    'probability' => 100,
-    'path' => CACHE . 'week' . DS,
+	'engine' => 'File',
+	'duration' => '+1 week',
+	'probability' => 100,
+	'path' => CACHE . 'week' . DS,
 ));
 
 // month cache file storage
 Cache::config('month', array(
-    'engine' => 'File',
-    'duration' => '+1 month',
-    'probability' => 100,
-    'path' => CACHE . 'month' . DS,
+	'engine' => 'File',
+	'duration' => '+1 month',
+	'probability' => 100,
+	'path' => CACHE . 'month' . DS,
 ));
 
 CakeLog::config('se_server_shell', array('engine' => 'File'));

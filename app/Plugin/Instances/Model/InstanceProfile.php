@@ -31,32 +31,38 @@ App::uses('InstancesAppModel', 'Instances.Model');
  */
 class InstanceProfile extends InstancesAppModel {
 
+	public $actsAs = array(
+		'JsonColumn' => array(
+			'fields' => array('profile_settings')
+		)
+	);
+
 	/**
 	 * Validation rules
 	 *
 	 * @var array
 	 */
-    public $validate = array(
-        'name' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'user_id' => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
+	public $validate = array(
+		'name' => array(
+			'notEmpty' => array(
+				'rule' => array('notEmpty'),
+				//'message' => 'Your custom message here',
+				'allowEmpty' => false,
+			//'required' => true,
+			//'last' => false, // Stop validation after this rule
+			//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'user_id' => array(
+			'uuid' => array(
+				'rule' => array('uuid'),
+				//'message' => 'Your custom message here',
+				'allowEmpty' => false,
+			//'required' => true,
+			//'last' => false, // Stop validation after this rule
+			//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
 //        'game_mode' => array(
 //            'notEmpty' => array(
 //                'rule' => array('notEmpty'),
@@ -387,12 +393,6 @@ class InstanceProfile extends InstancesAppModel {
 //            //'on' => 'create', // Limit validation to 'create' or 'update' operations
 //            ),
 //        ),
-    );
-
-	public $actsAs = array(
-		'JsonColumn' => array(
-			'fields' => array('profile_settings')
-		)
 	);
 
 	/**
@@ -421,7 +421,7 @@ class InstanceProfile extends InstancesAppModel {
 	);
 
 	public function generateCloneName($sourceName) {
-		$cloneNumber = '0';
+		$cloneNumber = 0;
 		$nameExists = true;
 		while ($nameExists) {
 			$proposedCloneName = $sourceName . '_Clone' . ++$cloneNumber;
@@ -433,6 +433,26 @@ class InstanceProfile extends InstancesAppModel {
 			));
 		}
 		return $proposedCloneName;
+	}
+
+	// TODO: Create behavior for serialization
+	public function loadProfile($id) {
+		//$this->recursive = -1;
+		$this->read(null, $id);
+		$this->data[$this->alias] = array_merge(
+			array('id' => $id, 'name' => $this->data[$this->alias]['name']), $this->data[$this->alias]['profile_settings']
+		);
+		return $this->data;
+	}
+	
+	// TODO: Create behavior for serialization
+	public function saveProfile($profileData) {
+		$this->id = $profileData[$this->alias]['id'];
+		$profileSettings = array_diff_key($profileData[$this->alias], $this->schema());
+		$profileSettingKeys = array_keys($profileSettings);
+		$this->data[$this->alias] = strip_keys($profileData[$this->alias], $profileSettingKeys);
+		$this->data[$this->alias]['profile_settings'] = $profileSettings;
+		return $this->save();
 	}
 
 }

@@ -24,9 +24,7 @@
 		<thead>
 			<tr>
 				<th><?php echo $this->Paginator->sort('name'); ?></th>
-				<th><?php echo $this->Paginator->sort('game_mode'); ?></th>
-				<th><?php echo $this->Paginator->sort('max_players'); ?></th>
-				<th><?php echo $this->Paginator->sort('asteroid_amount'); ?></th>
+				<th><?php echo $this->Paginator->sort('game_id'); ?></th>
 				<th class="actions"><?php echo __('Actions'); ?></th>
 			</tr>
 		</thead>
@@ -34,9 +32,7 @@
 			<?php foreach ($instanceTypes as $instanceType): ?>
 				<tr>
 					<td><?php echo h($instanceType['InstanceType']['name']); ?>&nbsp;</td>
-					<td><?php echo h($instanceType['InstanceType']['game_mode']); ?>&nbsp;</td>
-					<td><?php echo h($instanceType['InstanceType']['max_players']); ?>&nbsp;</td>
-					<td><?php echo h($instanceType['InstanceType']['asteroid_amount']); ?>&nbsp;</td>
+					<td><?php echo h($instanceType['InstanceType']['game_id']); ?>&nbsp;</td>
 					<td class="actions">
 						<?php echo $this->Html->buttonGroup(
 							array(

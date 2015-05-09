@@ -57,7 +57,7 @@ class InstanceTypesController extends InstancesAppController {
     public function admin_add() {
         if ($this->request->is('post')) {
             $this->InstanceType->create();
-            if ($this->InstanceType->save($this->request->data)) {
+            if ($this->InstanceType->saveProfile($this->request->data)) {
                 $this->setFlash(__('The instance type has been saved.'));
                 return $this->redirect(array('action' => 'index'));
             } else {
@@ -103,21 +103,46 @@ class InstanceTypesController extends InstancesAppController {
             throw new NotFoundException(__('Invalid instance type'));
         }
         if ($this->request->is(array('post', 'put'))) {
-            if ($this->InstanceType->save($this->request->data)) {
+            if ($this->InstanceType->saveProfile($this->request->data)) {
                 $this->setFlash(__('The instance type has been saved.'));
                 return $this->redirect(array('action' => 'index'));
             } else {
                 $this->setFlash(__('The instance type could not be saved. Please, try again.'), 'danger');
             }
         } else {
-            $options = array('conditions' => array('InstanceType.' . $this->InstanceType->primaryKey => $id));
-            $this->request->data = $this->InstanceType->find('first', $options);
+             $this->request->data = $this->InstanceType->loadProfile($id);
         }
         // Set form configuration options
 		// TODO: Create URL variable for game
 		$gameId = 0;
         $this->set($this->SEServer->getConfigOptions($gameId, 'SessionSettings'));
     }
+	
+	// Convert old instance type to new
+	// TODO: Remove this after use
+	public function admin_convert() {
+		$this->InstanceType->recursive = -1;
+		$instanceTypes = $this->InstanceType->find('all');
+		foreach ($instanceTypes as $instanceType) {
+			$convertedType['InstanceType'] = array(
+				'id' => $instanceType['InstanceType']['id'],
+			);
+			$this->InstanceType->id = $instanceType['InstanceType']['id'];
+			
+			unset($instanceType['InstanceType']['id']);
+			unset($instanceType['InstanceType']['name']);
+			unset($instanceType['InstanceType']['game_id']);
+			unset($instanceType['InstanceType']['created']);
+			unset($instanceType['InstanceType']['updated']);
+			unset($instanceType['InstanceType']['profile_settings']);
+			
+			$convertedType['InstanceType']['profile_settings'] = $instanceType['InstanceType'];
+			//debug($convertedType);die;
+			$this->InstanceType->save($convertedType);
+		}
+		$this->setFlash(__('The instance types have been converted.'));
+		return $this->redirect(array('action' => 'index'));
+	}
 
     /**
      * admin_delete method

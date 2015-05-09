@@ -63,7 +63,7 @@ class InstanceProfilesController extends InstancesAppController {
         if ($this->request->is('post')) {
             $this->request->data['InstanceProfile']['user_id'] = AuthComponent::user('id');
             $this->InstanceProfile->create();
-            if ($this->InstanceProfile->save($this->request->data)) {
+            if ($this->InstanceProfile->saveProfile($this->request->data)) {
                 $this->setFlash(__('The instance profile has been saved.'));
                 return $this->redirect(array('action' => 'index'));
             } else {
@@ -110,21 +110,20 @@ class InstanceProfilesController extends InstancesAppController {
      * @return void
      */
     public function edit($id = null) {
-        // Check ownership // TODO: Create proper method for this?
+		// Check ownership // TODO: Create proper method for this?
         $this->InstanceProfile->id = $id;
         if (!$this->InstanceProfile->exists($id) || (AuthComponent::user('role_id') > 2 && $this->InstanceProfile->field('user_id') !== AuthComponent::user('id'))) {
             throw new NotFoundException(__('Invalid instance profile'));
         }
         if ($this->request->is(array('post', 'put'))) {
-            if ($this->InstanceProfile->save($this->request->data)) {
+            if ($this->InstanceProfile->saveProfile($this->request->data)) {
                 $this->setFlash(__('The instance profile has been saved.'));
                 return $this->redirect(array('action' => 'index'));
             } else {
                 $this->setFlash(__('The instance profile could not be saved. Please, try again.'), 'danger');
             }
         } else {
-            $options = array('conditions' => array('InstanceProfile.' . $this->InstanceProfile->primaryKey => $id));
-            $this->request->data = $this->InstanceProfile->find('first', $options);
+            $this->request->data = $this->InstanceProfile->loadProfile($id);
         }
         // Set form configuration options
 		// TODO: Create URL variable for game
@@ -145,6 +144,7 @@ class InstanceProfilesController extends InstancesAppController {
 			
 			unset($instanceProfile['InstanceProfile']['id']);
 			unset($instanceProfile['InstanceProfile']['name']);
+			unset($instanceProfile['InstanceProfile']['game_id']);
 			unset($instanceProfile['InstanceProfile']['user_id']);
 			unset($instanceProfile['InstanceProfile']['created']);
 			unset($instanceProfile['InstanceProfile']['updated']);

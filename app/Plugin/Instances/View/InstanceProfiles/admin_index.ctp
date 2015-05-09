@@ -24,8 +24,8 @@
 		<thead>
 			<tr>
 				<th><?php echo $this->Paginator->sort('name'); ?></th>
-				<th><?php echo $this->Paginator->sort('game_mode'); ?></th>
 				<th><?php echo $this->Paginator->sort('user_id'); ?></th>
+				<th><?php echo $this->Paginator->sort('game_id'); ?></th>
 				<th class="actions"><?php echo __('Actions'); ?></th>
 			</tr>
 		</thead>
@@ -33,8 +33,8 @@
 			<?php foreach ($instanceProfiles as $instanceProfile): ?>
 				<tr>
 					<td><?php echo h($instanceProfile['InstanceProfile']['name']); ?>&nbsp;</td>
-					<td><?php echo h($instanceProfile['InstanceProfile']['game_mode']); ?>&nbsp;</td>
 					<td><?php echo h($instanceProfile['User']['username']); ?>&nbsp;</td>
+					<td><?php echo h($instanceProfile['InstanceProfile']['game_id']); ?>&nbsp;</td>
 					<td class="actions">
 						<?php echo $this->Html->buttonGroup(
 							array(
