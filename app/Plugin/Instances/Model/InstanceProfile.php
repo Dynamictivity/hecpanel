@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  HE cPanel -- Hosting Engineers Control Panel
  *  Copyright (C) 2015  Dynamictivity LLC (http://www.hecpanel.com)
@@ -30,11 +31,11 @@ App::uses('InstancesAppModel', 'Instances.Model');
  */
 class InstanceProfile extends InstancesAppModel {
 
-    /**
-     * Validation rules
-     *
-     * @var array
-     */
+	/**
+	 * Validation rules
+	 *
+	 * @var array
+	 */
     public $validate = array(
         'name' => array(
             'notEmpty' => array(
@@ -56,391 +57,382 @@ class InstanceProfile extends InstancesAppModel {
             //'on' => 'create', // Limit validation to 'create' or 'update' operations
             ),
         ),
-        'game_mode' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'inventory_size_multiplier' => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'assembler_speed_multiplier' => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'assembler_efficiency_multiplier' => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'refinery_speed_multiplier' => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'online_mode' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'max_floating_objects' => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'environment_hostility' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'auto_healing' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'enable_copy_paste' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'auto_save' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'weapons_enabled' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'show_player_names_on_hud' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'thruster_damage' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'cargo_ships_enabled' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'enable_spectator' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'remove_trash' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'world_size_km' => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'respawn_ship_delete' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'reset_ownership' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'welder_speed_multiplier' => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'grinder_speed_multiplier' => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'realistic_sound' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'client_can_save' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'hack_speed_multiplier' => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'permanent_death' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'spawn_ship_time_multiplier' => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'procedural_density' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'procedural_seed' => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-                'message' => 'Required, set to 0 to disable procedural generation.',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'destructible_blocks' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'enable_ingame_scripts' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'enable_oxygen' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'scenario_subtype_id' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
+//        'game_mode' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'inventory_size_multiplier' => array(
+//            'numeric' => array(
+//                'rule' => array('numeric'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'assembler_speed_multiplier' => array(
+//            'numeric' => array(
+//                'rule' => array('numeric'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'assembler_efficiency_multiplier' => array(
+//            'numeric' => array(
+//                'rule' => array('numeric'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'refinery_speed_multiplier' => array(
+//            'numeric' => array(
+//                'rule' => array('numeric'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'online_mode' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'max_floating_objects' => array(
+//            'numeric' => array(
+//                'rule' => array('numeric'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'environment_hostility' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'auto_healing' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'enable_copy_paste' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'auto_save' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'weapons_enabled' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'show_player_names_on_hud' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'thruster_damage' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'cargo_ships_enabled' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'enable_spectator' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'remove_trash' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'world_size_km' => array(
+//            'numeric' => array(
+//                'rule' => array('numeric'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'respawn_ship_delete' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'reset_ownership' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'welder_speed_multiplier' => array(
+//            'numeric' => array(
+//                'rule' => array('numeric'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'grinder_speed_multiplier' => array(
+//            'numeric' => array(
+//                'rule' => array('numeric'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'realistic_sound' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'client_can_save' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'hack_speed_multiplier' => array(
+//            'numeric' => array(
+//                'rule' => array('numeric'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'permanent_death' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'spawn_ship_time_multiplier' => array(
+//            'numeric' => array(
+//                'rule' => array('numeric'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'procedural_density' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'procedural_seed' => array(
+//            'numeric' => array(
+//                'rule' => array('numeric'),
+//                'message' => 'Required, set to 0 to disable procedural generation.',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'destructible_blocks' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'enable_ingame_scripts' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'enable_oxygen' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
+//        'scenario_subtype_id' => array(
+//            'notEmpty' => array(
+//                'rule' => array('notEmpty'),
+//                //'message' => 'Your custom message here',
+//                'allowEmpty' => false,
+//            //'required' => true,
+//            //'last' => false, // Stop validation after this rule
+//            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+//            ),
+//        ),
     );
 
-    //The Associations below have been created with all possible keys, those that are not needed can be removed
+	public $actsAs = array(
+		'JsonColumn' => array(
+			'fields' => array('profile_settings')
+		)
+	);
 
-    /**
-     * belongsTo associations
-     *
-     * @var array
-     */
-    public $belongsTo = array(
-        'User' => array(
-            'className' => 'User',
-            'foreignKey' => 'user_id',
-            'conditions' => '',
-            'fields' => '',
-            'order' => ''
-        )
-    );
+	/**
+	 * belongsTo associations
+	 *
+	 * @var array
+	 */
+	public $belongsTo = array(
+		'User' => array(
+			'className' => 'User',
+			'foreignKey' => 'user_id',
+		)
+	);
 
-    /**
-     * hasMany associations
-     *
-     * @var array
-     */
-    public $hasMany = array(
-        'Instance' => array(
-            'className' => 'Instance',
-            'foreignKey' => 'instance_profile_id',
-            'dependent' => true,
-            'conditions' => '',
-            'fields' => '',
-            'order' => '',
-            'limit' => '',
-            'offset' => '',
-            'exclusive' => '',
-            'finderQuery' => '',
-            'counterQuery' => ''
-        )
-    );
+	/**
+	 * hasMany associations
+	 *
+	 * @var array
+	 */
+	public $hasMany = array(
+		'Instance' => array(
+			'className' => 'Instance',
+			'foreignKey' => 'instance_profile_id',
+			'dependent' => true,
+		)
+	);
 
-    public function generateCloneName($sourceName) {
-        $cloneNumber = '0';
-        $nameExists = true;
-        while ($nameExists) {
-            $cloneNumber++;
-            $proposedCloneName = $sourceName . '_Clone' . $cloneNumber;
-            $nameExists = $this->find('count', array(
-                'conditions' => array(
-                    'InstanceProfile.name' => $proposedCloneName,
-                    'InstanceProfile.user_id' => AuthComponent::user('id')
-                )
-                    )
-            );
-        }
-        return $proposedCloneName;
-    }
+	public function generateCloneName($sourceName) {
+		$cloneNumber = '0';
+		$nameExists = true;
+		while ($nameExists) {
+			$proposedCloneName = $sourceName . '_Clone' . ++$cloneNumber;
+			$nameExists = $this->find('count', array(
+				'conditions' => array(
+					'InstanceProfile.name' => $proposedCloneName,
+					'InstanceProfile.user_id' => AuthComponent::user('id')
+				)
+			));
+		}
+		return $proposedCloneName;
+	}
 
 }

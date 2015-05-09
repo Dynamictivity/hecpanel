@@ -131,6 +131,31 @@ class InstanceProfilesController extends InstancesAppController {
 		$gameId = 0;
         $this->set($this->SEServer->getConfigOptions($gameId, 'SessionSettings'));
     }
+	
+	// Convert old instance profile type to new
+	// TODO: Remove this after use
+	public function admin_convert() {
+		$this->InstanceProfile->recursive = -1;
+		$instanceProfiles = $this->InstanceProfile->find('all');
+		foreach ($instanceProfiles as $instanceProfile) {
+			$convertedProfile['InstanceProfile'] = array(
+				'id' => $instanceProfile['InstanceProfile']['id'],
+			);
+			$this->InstanceProfile->id = $instanceProfile['InstanceProfile']['id'];
+			
+			unset($instanceProfile['InstanceProfile']['id']);
+			unset($instanceProfile['InstanceProfile']['name']);
+			unset($instanceProfile['InstanceProfile']['user_id']);
+			unset($instanceProfile['InstanceProfile']['created']);
+			unset($instanceProfile['InstanceProfile']['updated']);
+			unset($instanceProfile['InstanceProfile']['profile_settings']);
+			
+			$convertedProfile['InstanceProfile']['profile_settings'] = $instanceProfile['InstanceProfile'];
+			$this->InstanceProfile->save($convertedProfile);
+		}
+		$this->setFlash(__('The instance profiles have been converted.'));
+		return $this->redirect(array('action' => 'index'));
+	}
 
     /**
      * delete method
