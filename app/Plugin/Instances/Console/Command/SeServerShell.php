@@ -88,17 +88,21 @@ class SeServerShell extends AppShell {
 		if (!$this->serverBinariesDirectory) {
 			$this->serverBinariesDirectory = $this->serverBaseDirectory . DS . Configure::read(APP_CONFIG_SCOPE . '.Instances.serverBinariesDirectory');
 		}
-		if (!$this->sourceBinariesDirectory) {
-			$this->sourceBinariesDirectory = Configure::read(APP_CONFIG_SCOPE . '.Instances.sourceBinariesDirectory');
-		}
 		if (!$this->backupDirectory) {
 			$this->backupDirectory = Configure::read(APP_CONFIG_SCOPE . '.Instances.backupDirectory');
 		}
-		if (!$this->binariesLastUpdated) {
-			$this->binariesLastUpdated = Cache::read(APP_CONFIG_SCOPE . '.Instances.binariesLastUpdated', 'month');
-		}
 		if (!$this->games) {
 			$this->games = Configure::read(APP_CONFIG_SCOPE . '.Instances.games');
+		}
+		if (!$this->binariesLastUpdated) {
+			foreach ($this->games as $gameId => $game) {
+				$this->binariesLastUpdated[$gameId] = Cache::read(APP_CONFIG_SCOPE . '.Instances.binariesLastUpdated' . '-' . $gameId, 'month');
+			}
+		}
+		if (!$this->sourceBinariesDirectory) {
+			foreach ($this->games as $gameId => $game) {
+				$this->sourceBinariesDirectory[$gameId] = $game['sourceBinariesDirectory'];
+			}
 		}
 	}
 
@@ -150,6 +154,8 @@ class SeServerShell extends AppShell {
 		$commandsToExecute = Hash::extract($commands, '{n}.CommandQueue.command');
 		$this->__out('Execute commands:', $commandsToExecute);
 		foreach ($commandsToExecute as $command) {
+			// Clear instance list each cycle
+			$this->instances = array();
 			$this->host($command);
 		}
 		return $commandsToExecute;
@@ -186,21 +192,17 @@ class SeServerShell extends AppShell {
 	public function checkForUpdates() {
 		foreach ($this->games as $gameId => $game) {
 			$this->__out('Checking for ' . $game['name'] . ' updates:', 'Started');
-			$dedicatedServerExeStats = stat($this->__getserverBinariesDirectory($gameId) . DS . 'DedicatedServer64' . DS . $this->__getGameDedicatedBinaryList()[$gameId]);
+			$dedicatedServerExeStats = stat($game['sourceBinariesDirectory'] . DS . 'DedicatedServer64' . DS . $game['dedicatedBinary']);
 			// TODO: MD5 Checksum of directory?
 			$lastUpdated = $dedicatedServerExeStats[9];
 			if ($this->binariesLastUpdated[$gameId] != $lastUpdated) {
 				$this->__out($game['name'] . ' update found.');
-				$this->binariesLastUpdated[$this->getGameList()[$gameId]] = $lastUpdated;
+				$this->binariesLastUpdated[$gameId] = $lastUpdated;
 				$this->updateAll($gameId);
 				$this->__out($game['name'] . ' update completed.');
 			}
 		}
 		$this->__out('Update check completed.');
-	}
-
-	private function __getServerBinariesDirectory($gameId) {
-		return $this->serverBinariesDirectory . DS . $this->__getGameFolderList()[$gameId];
 	}
 
 	private function __getGameFolderList() {
@@ -214,7 +216,7 @@ class SeServerShell extends AppShell {
 	public function updateAll($gameId = null) {
 		Cache::write(APP_CONFIG_SCOPE . '.App.maintenanceMode', true, 'hour');
 		// Ensure server list is set
-		$this->__setInstanceList($gameId);
+		$this->__setInstanceList($gameId, true);
 		// Backup instances
 		//$this->backupAll();
 		// Stop instances
@@ -234,25 +236,24 @@ class SeServerShell extends AppShell {
 //		passthru('robocopy "' . $this->serverDataDirectory . '" "' . $this->backupDirectory . '" /MIR');
 //		$this->__out('Instances\' backup completed.');
 //	}
-
 	// TODO: Medieval Engineers
 	public function updateBinaries($gameId) {
 		$this->__out('Updating ' . $this->getGameList()[$gameId] . ' binaries.');
 		// Get updated server binaries
-		passthru('robocopy "' . $this->__getSourceBinariesDirectory($gameId) . '" "' . $this->__getServerBinariesDirectory($gameId) . '" /MIR');
+		passthru('robocopy "' . $this->sourceBinariesDirectory[$gameId] . '" "' . $this->__getServerBinariesDirectory($gameId) . '" /MIR');
 		// Update last modified date
 		$this->__saveLastUpdated($gameId);
 		$this->__out($this->getGameList()[$gameId] . ' server binaries updated.');
 	}
 
-	private function __getSourceBinariesDirectory($gameId) {
-		return $this->sourceBinariesDirectory . DS . $this->__getGameFolderList()[$gameId];
+	private function __getServerBinariesDirectory($gameId) {
+		return $this->serverBinariesDirectory . DS . $this->__getGameFolderList()[$gameId];
 	}
 
 	// TODO: Medieval Engineers
 	private function __saveLastUpdated($gameId) {
 		// Set binaries last updated
-		Cache::write(APP_CONFIG_SCOPE . '.Instances.binariesLastUpdated.' . $this->getGameList()[$gameId], $this->binariesLastUpdated, 'month');
+		Cache::write(APP_CONFIG_SCOPE . '.Instances.binariesLastUpdated' . '-' . $gameId, $this->binariesLastUpdated[$gameId], 'month');
 	}
 
 	public function stopAll() {
@@ -373,8 +374,8 @@ class SeServerShell extends AppShell {
 		$this->__out($instanceId . ' exe is updated.');
 	}
 
-	private function __setInstanceList($gameId = null) {
-		if (empty($this->instances)) {
+	private function __setInstanceList($gameId = null, $refresh = false) {
+		if (empty($this->instances) || $refresh) {
 			$gameScope = array();
 			if ($gameId) {
 				$gameScope = array('Instance.game_id' => $gameId);
