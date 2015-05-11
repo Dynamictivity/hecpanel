@@ -29,7 +29,8 @@ class SeServerShell extends AppShell {
 	public $serverBinariesDirectory = null;
 	public $sourceBinariesDirectory = null;
 	public $backupDirectory = null;
-	public $binariesLastUpdated = null;
+	public $binariesLastUpdated = array();
+	public $games = null;
 	// Instance model
 	private $Instance = null;
 	// Instance Type model
@@ -39,7 +40,7 @@ class SeServerShell extends AppShell {
 	// Configuration model
 	private $Configuration = null;
 	// MemoryLog model
-	private $MemoryLog = null;
+//	private $MemoryLog = null;
 	// HostServer model
 	private $HostServer = null;
 	// User model
@@ -66,8 +67,9 @@ class SeServerShell extends AppShell {
 		$this->InstanceProfile->recursive = -1;
 		$this->Configuration = ClassRegistry::init('Config.Configuration');
 		$this->Configuration->recursive = -1;
-		$this->MemoryLog = ClassRegistry::init('Instances.MemoryLog');
-		$this->MemoryLog->recursive = -1;
+		// TODO: Create pollAllMemoryUsage()
+//		$this->MemoryLog = ClassRegistry::init('Instances.MemoryLog');
+//		$this->MemoryLog->recursive = -1;
 		$this->HostServer = ClassRegistry::init('Instances.HostServer');
 		$this->HostServer->recursive = -1;
 		$this->User = ClassRegistry::init('User');
@@ -81,10 +83,10 @@ class SeServerShell extends AppShell {
 			$this->serverBaseDirectory = Configure::read(APP_CONFIG_SCOPE . '.Instances.serverBaseDirectory') . DS . Configure::read(APP_CONFIG_SCOPE . '.App.environment');
 		}
 		if (!$this->serverDataDirectory) {
-			$this->serverDataDirectory = Configure::read(APP_CONFIG_SCOPE . '.Instances.serverDataDirectory');
+			$this->serverDataDirectory = Configure::read(APP_CONFIG_SCOPE . '.Instances.serverDataDirectory') . DS . Configure::read(APP_CONFIG_SCOPE . '.App.environment');
 		}
 		if (!$this->serverBinariesDirectory) {
-			$this->serverBinariesDirectory = Configure::read(APP_CONFIG_SCOPE . '.Instances.serverBinariesDirectory');
+			$this->serverBinariesDirectory = $this->serverBaseDirectory . DS . Configure::read(APP_CONFIG_SCOPE . '.Instances.serverBinariesDirectory');
 		}
 		if (!$this->sourceBinariesDirectory) {
 			$this->sourceBinariesDirectory = Configure::read(APP_CONFIG_SCOPE . '.Instances.sourceBinariesDirectory');
@@ -94,6 +96,9 @@ class SeServerShell extends AppShell {
 		}
 		if (!$this->binariesLastUpdated) {
 			$this->binariesLastUpdated = Cache::read(APP_CONFIG_SCOPE . '.Instances.binariesLastUpdated', 'month');
+		}
+		if (!$this->games) {
+			$this->games = Configure::read(APP_CONFIG_SCOPE . '.Instances.games');
 		}
 	}
 
@@ -153,27 +158,22 @@ class SeServerShell extends AppShell {
 	private function __markCommandsAsExecuted($commands) {
 		$executedCommandIds = Hash::extract($commands, '{n}.CommandQueue.id');
 		$this->__out('Mark commands as executed:', $executedCommandIds);
-		$this->CommandQueue->updateAll(
-				array(
+		$this->CommandQueue->updateAll(array(
 			'CommandQueue.last_executed' => "NOW()",
 			'CommandQueue.last_executed_host_server_id' => "'" . $this->hostServer['HostServer']['id'] . "'"
 				), array(
 			'CommandQueue.id' => $executedCommandIds
-				)
-		);
+		));
 		return $executedCommandIds;
 	}
 
 	private function __disableNonRecurringCommands($commands) {
 		$nonRecurringCommandIds = array_keys(array_diff(Hash::combine($commands, '{n}.CommandQueue.id', '{n}.CommandQueue.is_recurring'), array(true)));
 		$this->__out('Disable non-recurring commands:', $nonRecurringCommandIds);
-		$this->CommandQueue->updateAll(
-				array(
-			'CommandQueue.is_enabled' => NULL,
-				), array(
+		$this->CommandQueue->updateAll(array(
+			'CommandQueue.is_enabled' => NULL,), array(
 			'CommandQueue.id' => $nonRecurringCommandIds
-				)
-		);
+		));
 		return $nonRecurringCommandIds;
 	}
 
@@ -184,97 +184,121 @@ class SeServerShell extends AppShell {
 
 	// TODO: Medieval Engineers
 	public function checkForUpdates() {
-		$this->__out('Checking for updates:', 'Started');
-		$dedicatedServerExeStats = stat(Configure::read(APP_CONFIG_SCOPE . '.Instances.sourceBinariesDirectory') . DS . 'DedicatedServer64\\SpaceEngineersDedicated.exe');
-		// TODO: MD5 Checksum of directory?
-		$lastUpdated = $dedicatedServerExeStats[9];
-		if ($this->binariesLastUpdated != $lastUpdated) {
-			$this->__out('Update found.');
-			$this->binariesLastUpdated = $lastUpdated;
-			$this->updateAll();
-			return;
+		foreach ($this->games as $gameId => $game) {
+			$this->__out('Checking for ' . $game['name'] . ' updates:', 'Started');
+			$dedicatedServerExeStats = stat($this->__getserverBinariesDirectory($gameId) . DS . 'DedicatedServer64' . DS . $this->__getGameDedicatedBinaryList()[$gameId]);
+			// TODO: MD5 Checksum of directory?
+			$lastUpdated = $dedicatedServerExeStats[9];
+			if ($this->binariesLastUpdated[$gameId] != $lastUpdated) {
+				$this->__out($game['name'] . ' update found.');
+				$this->binariesLastUpdated[$this->getGameList()[$gameId]] = $lastUpdated;
+				$this->updateAll($gameId);
+				$this->__out($game['name'] . ' update completed.');
+			}
 		}
-		$this->__out('No updates found.');
+		$this->__out('Update check completed.');
 	}
 
-	public function updateAll() {
+	private function __getServerBinariesDirectory($gameId) {
+		return $this->serverBinariesDirectory . DS . $this->__getGameFolderList()[$gameId];
+	}
+
+	private function __getGameFolderList() {
+		return Hash::extract($this->games, '{n}.folder');
+	}
+
+	public function getGameList() {
+		return Hash::extract($this->games, '{n}.name');
+	}
+
+	public function updateAll($gameId = null) {
 		Cache::write(APP_CONFIG_SCOPE . '.App.maintenanceMode', true, 'hour');
 		// Ensure server list is set
-		$this->__setServerList();
-		// Backup servers
+		$this->__setInstanceList($gameId);
+		// Backup instances
 		//$this->backupAll();
-		// Stop servers
+		// Stop instances
 		$this->stopAll();
-		// Update servers
-		$this->updateBinaries();
-		// Cycle servers
+		// Update game binaries
+		$this->updateBinaries($gameId);
+		// Cycle instances
 		$this->cycleAll();
 		Cache::delete(APP_CONFIG_SCOPE . '.App.maintenanceMode', 'hour');
 		$this->__out('Update process completed.');
 	}
 
 	//TODO: Implement this in $this->updateAll()
-	public function backupAll() {
-		$this->__out('Backing up servers.');
-		// Backup servers
-		passthru('robocopy "' . $this->serverDataDirectory . '" "' . $this->backupDirectory . '" /MIR');
-		$this->__out('Server backup completed.');
-	}
+//	public function backupAll() {
+//		$this->__out('Backing up instances.');
+//		// Backup instances
+//		passthru('robocopy "' . $this->serverDataDirectory . '" "' . $this->backupDirectory . '" /MIR');
+//		$this->__out('Instances\' backup completed.');
+//	}
 
 	// TODO: Medieval Engineers
-	public function updateBinaries() {
-		$this->__out('Updating server binaries.');
+	public function updateBinaries($gameId) {
+		$this->__out('Updating ' . $this->getGameList()[$gameId] . ' binaries.');
 		// Get updated server binaries
-		passthru('robocopy "' . $this->sourceBinariesDirectory . '" "' . $this->serverBaseDirectory . DS . $this->serverBinariesDirectory . '" /MIR');
+		passthru('robocopy "' . $this->__getSourceBinariesDirectory($gameId) . '" "' . $this->__getServerBinariesDirectory($gameId) . '" /MIR');
 		// Update last modified date
-		$this->__saveLastUpdated();
-		$this->__out('Server binaries updated.');
+		$this->__saveLastUpdated($gameId);
+		$this->__out($this->getGameList()[$gameId] . ' server binaries updated.');
+	}
+
+	private function __getSourceBinariesDirectory($gameId) {
+		return $this->sourceBinariesDirectory . DS . $this->__getGameFolderList()[$gameId];
 	}
 
 	// TODO: Medieval Engineers
-	private function __saveLastUpdated() {
+	private function __saveLastUpdated($gameId) {
 		// Set binaries last updated
-		Cache::write(APP_CONFIG_SCOPE . '.Instances.binariesLastUpdated', $this->binariesLastUpdated, 'month');
+		Cache::write(APP_CONFIG_SCOPE . '.Instances.binariesLastUpdated.' . $this->getGameList()[$gameId], $this->binariesLastUpdated, 'month');
 	}
 
 	public function stopAll() {
 		$this->__out('Stopping all server instances.');
-		// Ensure server list is set
-		$this->__setServerList();
-		// Stop main server, force kill
+		// Ensure instance list is set
+		$this->__setInstanceList();
+		// Stop main instance (name), force kill
 		// TODO: Medieval Engineers
-		$this->stop('SpaceEngineersDedicated', true);
-		// Stop each server force kill
-		foreach ($this->instances as $server) {
-			$this->stop($server, true);
+		foreach ($this->__getGameDedicatedBinaryList() as $dedicatedBinary) {
+			$this->stop($dedicatedBinary, true);
+		}
+		// Stop each instance force kill
+		foreach ($this->instances as $instance) {
+			$this->stop($instance, true);
 		}
 		$this->__out('All server instances stopped.');
+	}
+
+	private function __getGameDedicatedBinaryList() {
+		return Hash::extract($this->games, '{n}.dedicatedBinary');
 	}
 
 	public function stop($instanceId, $forced = false) {
 		if ($this->processState($instanceId) == 'Stopped') {
 			return $this->__out($instanceId . ' is already stopped.');
 		}
-		// Stop server gracefully
+		// Stop instance gracefully
 		passthru('taskkill /IM ' . $instanceId . '.exe');
 		$this->__out($instanceId . ' was sent a graceful termination signal.');
 		if ($forced) {
-			// Force kill server if still running
+			// Force kill instance if still running
 			passthru('taskkill /IM ' . $instanceId . '.exe /F');
 			$this->__out($instanceId . ' was sent a forceful termination signal.');
 		}
 	}
 
 	public function cycleAll() {
-		$this->__out('Cycling all servers.');
-		// Ensure server list is set
-		$this->__setServerList();
-		// Cycle each server
-		foreach ($this->instances as $server) {
-			// Update each server exe, stop server to ensure binary can copy properly
-			$this->cycle($server);
+		$this->__out('Cycling all instances.');
+		// Ensure instance list is set
+		$this->__setInstanceList();
+		// Cycle each instance
+		foreach ($this->instances as $instance) {
+			// Update each instance exe, stop instance to ensure binary can copy properly
+			$this->cycle($instance);
 		}
-		$this->__out('All servers cycled.');
+		$this->__out('All instances cycled.');
 	}
 
 	public function cycle($instanceId) {
@@ -282,26 +306,26 @@ class SeServerShell extends AppShell {
 		if (!$this->__verifyInstanceExistence($instanceId)) {
 			return $this->__out($instanceId . ' data directory does not exist.');
 		}
-		// Backup the server
+		// Backup the instance
 		$this->backup($instanceId);
-		// Stop server, force kill
+		// Stop instance, force kill
 		$this->stop($instanceId, true);
-		// Update the server
+		// Update the instance
 		$this->update($instanceId);
-		// Start the server
+		// Start the instance
 		$this->start($instanceId);
 		$this->__out($instanceId . ' is cycled.');
 	}
 
 	public function startAll() {
-		$this->__out('Starting all servers.');
-		// Ensure server list is set
-		$this->__setServerList();
-		// Start each server
-		foreach ($this->instances as $server) {
-			$this->start($server);
+		$this->__out('Starting all instances.');
+		// Ensure instance list is set
+		$this->__setInstanceList();
+		// Start each instance
+		foreach ($this->instances as $instance) {
+			$this->start($instance);
 		}
-		$this->__out('All servers started.');
+		$this->__out('All instances started.');
 	}
 
 	public function start($instanceId) {
@@ -312,46 +336,56 @@ class SeServerShell extends AppShell {
 		if (!$this->__verifyInstanceExistence($instanceId)) {
 			return $this->__out($instanceId . ' data directory does not exist.');
 		}
-		// Execute server binary
+		// Get instance
+		$instance = $this->readInstance($instanceId);
+		// TODO: RefreshConfig
+		// Execute instance binary
 		// TODO: Medieval Engineers
-		passthru('start /d "' . $this->serverBaseDirectory . DS . $this->serverBinariesDirectory . DS . 'DedicatedServer64" ' . $instanceId . '.exe -noconsole -path "' . $this->serverDataDirectory . DS . $this->readServer($instanceId)['User']['username'] . DS . $instanceId . DS . '"');
+		passthru('start /d "' . $this->__getServerBinariesDirectory($instance['Instance']['game_id']) . DS . 'DedicatedServer64" ' . $instanceId . '.exe -noconsole -path "' . $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . DS . '"');
 		$this->__out($instanceId . ' is starting up.');
 	}
 
 	public function restartAll() {
-		$this->__out('Restarting all servers.');
-		// Ensure server list is set
-		$this->__setServerList();
-		// Stop all servers
+		$this->__out('Restarting all instances.');
+		// Ensure instance list is set
+		$this->__setInstanceList();
+		// Stop all instances
 		$this->stopAll();
-		// Start all servers
+		// Start all instances
 		$this->startAll();
-		$this->__out('All servers restarted.');
+		$this->__out('All instances restarted.');
 	}
 
 	public function backup($instanceId) {
 		// Copy current world saves to user backup directory
-		passthru('robocopy "' . $this->serverDataDirectory . DS . $this->readServer($instanceId)['User']['username'] . DS . $instanceId . '\\Saves" "' . $this->serverDataDirectory . DS . $this->readServer($instanceId)['User']['username'] . DS . $instanceId . '\\Backup" /MIR');
+		passthru('robocopy "' . $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . DS . 'Saves" "' . $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . DS . 'Backup" /MIR');
 		$this->__out($instanceId . ' is backed up.');
 	}
 
 	// TODO: Medieval Engineers
 	public function update($instanceId) {
-		// Delete server exe
-		passthru('DEL "' . $this->serverBaseDirectory . DS . $this->serverBinariesDirectory . '\\DedicatedServer64\\' . $instanceId . '.exe"');
-		// Copy new server exe
-		passthru('COPY "' . $this->serverBaseDirectory . DS . $this->serverBinariesDirectory . '\\DedicatedServer64\\SpaceEngineersDedicated.exe" "' . $this->serverBaseDirectory . DS . $this->serverBinariesDirectory . '\\DedicatedServer64\\' . $instanceId . '.exe"');
+		// Read instance
+		$instance = $this->readInstance($instanceId);
+		// Delete server instance exe
+		passthru('DEL "' . $this->__getServerBinariesDirectory($instance['Instance']['game_id']) . DS . 'DedicatedServer64' . DS . $instanceId . '.exe"');
+		// Copy new server instance exe
+		passthru('COPY "' . $this->__getServerBinariesDirectory($instance['Instance']['game_id']) . DS . 'DedicatedServer64' . DS . $this->__getGameDedicatedBinaryList()[$instance['Instance']['game_id']] . '" "' . $this->__getServerBinariesDirectory($instance['Instance']['game_id']) . DS . 'DedicatedServer64' . DS . $instanceId . '.exe"');
 		$this->__out($instanceId . ' exe is updated.');
 	}
 
-	private function __setServerList() {
+	private function __setInstanceList($gameId = null) {
 		if (empty($this->instances)) {
+			$gameScope = array();
+			if ($gameId) {
+				$gameScope = array('Instance.game_id' => $gameId);
+			}
 			$this->instances = array_keys(
-				$this->Instance->find('list', array(
-					'conditions' => array(
-						'Instance.host_server_id' => $this->hostServer['HostServer']['id']
+					$this->Instance->find('list', array(
+						'conditions' => array(
+							'Instance.host_server_id' => $this->hostServer['HostServer']['id'],
+							$gameScope
+						))
 					)
-				))
 			);
 		}
 	}
@@ -403,14 +437,14 @@ class SeServerShell extends AppShell {
 		return call_user_func_array(array($this, $action), $args);
 	}
 
-	private function readServer($instanceId) {
+	private function readInstance($instanceId) {
 		$this->Instance->recursive = 1;
 		return $this->Instance->findById($instanceId);
 	}
 
 	private function __verifyInstanceExistence($instanceId) {
-		$userDirExists = file_exists($this->serverDataDirectory . DS . $this->readServer($instanceId)['User']['username']);
-		$instanceDirExists = file_exists($this->serverDataDirectory . DS . $this->readServer($instanceId)['User']['username'] . DS . $instanceId);
+		$userDirExists = file_exists($this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username']);
+		$instanceDirExists = file_exists($this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId);
 		// Check if user dir exists
 		if (!$userDirExists) {
 			return false;

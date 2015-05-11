@@ -113,6 +113,7 @@ class XmlBehavior extends ModelBehavior {
         return $dom;
     }
 
+	//TODO: Why is this debugged and killed?
     public function saveXml(Model $Model, $xmlFilePath, $xmlContents, $convertFromArray = true) {
         if ($convertFromArray) {
             $xmlContents = Xml::fromArray($xmlContents);

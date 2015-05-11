@@ -51,7 +51,7 @@ class SEServerComponent extends Component {
 	// Configuration model
 	private $Configuration = null;
 	// MemoryLog model
-	private $MemoryLog = null;
+//	private $MemoryLog = null;
 	// HostServer model
 	private $HostServer = null;
 	// User model
@@ -95,7 +95,7 @@ class SEServerComponent extends Component {
 		$this->InstanceType = ClassRegistry::init('Instances.InstanceType');
 		$this->InstanceProfile = ClassRegistry::init('Instances.InstanceProfile');
 		$this->Configuration = ClassRegistry::init('Config.Configuration');
-		$this->MemoryLog = ClassRegistry::init('Instances.MemoryLog');
+		//$this->MemoryLog = ClassRegistry::init('Instances.MemoryLog');
 		$this->HostServer = ClassRegistry::init('Instances.HostServer');
 		$this->User = ClassRegistry::init('User');
 		// Determine host servers
@@ -154,6 +154,7 @@ class SEServerComponent extends Component {
 	}
 
 	// This function not utilized yet
+	// TODO: Implement
 	public function pollAllMemoryUsage() {
 		// Ensure instance list is set
 		$this->__setInstanceList();
@@ -163,13 +164,13 @@ class SEServerComponent extends Component {
 			// TODO: Single SQL update
 			$status = $this->processState($instanceId);
 			if ($status !== 'Stopped') {
-				$this->MemoryLog->create();
+				//$this->MemoryLog->create();
 				$memoryUsage = str_replace(array('K', ','), '', $status);
-				$memoryLog[$this->MemoryLog->alias] = array(
-					'instance_id' => $instanceId,
-					'memory' => $memoryUsage
-				);
-				$this->MemoryLog->save($memoryLog);
+//				$memoryLog[$this->MemoryLog->alias] = array(
+//					'instance_id' => $instanceId,
+//					'memory' => $memoryUsage
+//				);
+//				$this->MemoryLog->save($memoryLog);
 			}
 		}
 	}
@@ -188,11 +189,11 @@ class SEServerComponent extends Component {
 		// Get instance
 		$instance = $this->readInstance($instanceId);
 		// Execute server instance binary
-		exec('start /d "' . $this->__getserverBinariesDirectory($instance['Instance']['game_id']) . DS . 'DedicatedServer64" ' . $instanceId . '.exe -noconsole -path "' . $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . DS . '"');
+		exec('start /d "' . $this->__getServerBinariesDirectory($instance['Instance']['game_id']) . DS . 'DedicatedServer64" ' . $instanceId . '.exe -noconsole -path "' . $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . DS . '"');
 		return $instanceId . ' is starting up';
 	}
 
-	private function __getserverBinariesDirectory($gameId) {
+	private function __getServerBinariesDirectory($gameId) {
 		return $this->serverBinariesDirectory . DS . $this->__getGameFolderList()[$gameId];
 	}
 
@@ -238,7 +239,7 @@ class SEServerComponent extends Component {
 	private function backup($instanceId) {
 		// Copy current world saves to user backup directory
 		// TODO: Change this path, make it configurable
-		exec('robocopy "' . $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . '\\Saves" "' . $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . '\\Backup" /MIR');
+		exec('robocopy "' . $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . DS . 'Saves" "' . $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . DS . 'Backup" /MIR');
 		return $instanceId . ' is backed up.';
 	}
 
@@ -247,9 +248,9 @@ class SEServerComponent extends Component {
 		// Read instance
 		$instance = $this->readInstance($instanceId);
 		// Delete server instance exe
-		exec('DEL "' . $this->__getserverBinariesDirectory($instance['Instance']['game_id']) . '\\DedicatedServer64\\' . $instanceId . '.exe"');
+		exec('DEL "' . $this->__getServerBinariesDirectory($instance['Instance']['game_id']) . DS . 'DedicatedServer64' . DS . $instanceId . '.exe"');
 		// Copy new server instance exe
-		exec('COPY "' . $this->__getserverBinariesDirectory($instance['Instance']['game_id']) . '\\DedicatedServer64\\' . $this->__getGameDedicatedBinaryList()[$instance['Instance']['game_id']] . '" "' . $this->__getserverBinariesDirectory($instance['Instance']['game_id']) . '\\DedicatedServer64\\' . $instanceId . '.exe"');
+		exec('COPY "' . $this->__getServerBinariesDirectory($instance['Instance']['game_id']) . DS . 'DedicatedServer64' . DS . $this->__getGameDedicatedBinaryList()[$instance['Instance']['game_id']] . '" "' . $this->__getServerBinariesDirectory($instance['Instance']['game_id']) . DS . 'DedicatedServer64' . DS . $instanceId . '.exe"');
 		return $instanceId . ' is updated.';
 	}
 
@@ -286,13 +287,13 @@ class SEServerComponent extends Component {
 		// TODO: Use this everywhere, find where it is not being used
 		switch ($configType) {
 			case 'server':
-				$configPath = $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . '\\' . $this->__getGameConfigList()[$instance['Instance']['game_id']];
+				$configPath = $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . DS . $this->__getGameConfigList()[$instance['Instance']['game_id']];
 				break;
 			case 'active_world':
-				$configPath = $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . '\\Saves\\Active';
+				$configPath = $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . DS . 'Saves' . DS . 'Active';
 				break;
 			case 'session':
-				$configPath = $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . '\\Saves\\Active\\Sandbox.sbc';
+				$configPath = $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . DS . 'Saves' . DS . 'Active' . DS . 'Sandbox.sbc';
 				break;
 		}
 		return $configPath;
@@ -335,9 +336,7 @@ class SEServerComponent extends Component {
 		$instanceType = $this->InstanceType->findById($instanceData['Instance']['instance_type_id'])['InstanceType']['profile_settings'];
 		$instance = $this->__stripValues($instanceData['Instance'], array('id', 'created', 'updated', 'user_id', 'instance_profile_id', 'instance_type_id'));
 		//$instanceProfile = $this->__stripValues($instanceData['InstanceProfile']['profile_settings']);
-		$configProfile = array_merge(
-				$instanceType, $instanceProfile, $instance
-		);
+		$configProfile = array_merge($instanceType, $instanceProfile, $instance);
 		$configProfile['world_name'] = 'Active';
 		$configProfile['load_world'] = $this->getConfigPath($instanceId, 'active_world');
 		// Parse server admins field

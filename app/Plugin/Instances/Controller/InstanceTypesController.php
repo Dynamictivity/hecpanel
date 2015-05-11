@@ -137,7 +137,6 @@ class InstanceTypesController extends InstancesAppController {
 			unset($instanceType['InstanceType']['profile_settings']);
 			
 			$convertedType['InstanceType']['profile_settings'] = $instanceType['InstanceType'];
-			//debug($convertedType);die;
 			$this->InstanceType->save($convertedType);
 		}
 		$this->setFlash(__('The instance types have been converted.'));
