@@ -99,10 +99,7 @@ CakePlugin::loadAll();
 App::uses('ClassRegistry', 'Utility');
 $Configuration = ClassRegistry::init('Config.Configuration');
 define('APP_CONFIG_SCOPE', 'Hecpanel');
-$Configuration->load('Instances');
-$Configuration->load('Users');
-$Configuration->load('Email');
-$Configuration->load('App');
+$Configuration->load();
 
 Configure::load('hecpanelconfig');
 Configure::write(APP_CONFIG_SCOPE . '.App.apiVersion', 'v1');

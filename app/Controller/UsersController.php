@@ -154,8 +154,7 @@ class UsersController extends AppController {
     }
 
     public function admin_login() {
-        $this->login();
-        $this->render('login');
+        return $this->redirect(array('controller' => 'users', 'action' => 'login', 'admin' => false, 'plugin' => false));
     }
 
     public function logout() {

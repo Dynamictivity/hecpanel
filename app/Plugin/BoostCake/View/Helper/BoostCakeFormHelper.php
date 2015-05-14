@@ -29,13 +29,27 @@ class BoostCakeFormHelper extends FormHelper {
     protected $_inputOptions = array();
     protected $_inputType = null;
     protected $_fieldName = null;
+	private $__view = null;
 
     public function __construct(View $view, $settings = array()) {
         parent::__construct($view, $settings);
         if (!empty($settings['inputDefaults'])) {
             $this->inputDefaults = $settings['inputDefaults'];
         }
+		$this->__view = $view;
     }
+	
+	public function buildDynamicForm($model, $requestData) {
+		$prohibitedFields = Configure::read(APP_CONFIG_SCOPE . '.Form.' . $model . '.prohibitedFields');
+		$out = null;
+		foreach (array_keys($requestData[$model]) as $field) {
+			if (in_array($field, explode(',', $prohibitedFields))) {
+				continue;
+			}
+			$out .= $this->input($field);
+		}
+		return $out;
+	}
 
     /**
      * Overwrite FormHelper::input()

@@ -27,33 +27,20 @@ $config = array(
     ),
     APP_CONFIG_SCOPE => array(
         'App' => array(
-            'appUrl' => 'http://demo.hecpanel.com',
-            'appName' => 'HEcPanel',
             'servername' => strtolower(gethostname()),
-            'environment' => 'DEV',
-            'googleAnalyticsId' => 'UA-5187184-20',
-        ),
-        'Controller' => array(
-            'Users' => 'signup,confirm,logout,login,forgot,reset,eula',
-        ),
-        'Email' => array(
-            'newAccountSubject' => 'Welcome to the Hosting Engineers Control Panel',
-            'newInstanceSubject' => 'Your Hosting Engineers Server Instance is Created',
-            'resetAccountSubject' => 'Reset Your Hosting Engineers Control Panel Password',
+			// TODO: Move to database
+			'emailEnabled' => false,
         ),
         'Instances' => array(
             'firstOpenPort' => 27017,
             'lastOpenPort' => 27040,
             'hostServerInstanceLimit' => 20,
-            'serverBaseDirectory' => 'C:' . DS . 'INSTANCES' . DS . 'LIBS',
-            'serverDataSkeletonDirectory' => 'C:' . DS . 'INSTANCES' . DS . 'LIBS' . DS . 'DEV' . DS . 'SERVER_SKELETON',
-            'serverDataDirectory' => 'C:' . DS . 'INSTANCES' . DS . 'DEV_INSTANCES',
-            'backupDirectory' => 'C:' . DS . 'INSTANCES' . DS . 'DEV_INSTANCES_BACKUP',
-            'sourceBinariesDirectory' => 'C:' . DS . 'Program Files (x86)' . DS . 'Steam' . DS . 'SteamApps' . DS . 'common' . DS . 'SpaceEngineers',
+            'backupDirectory' => 'C:' . DS . 'SERVER' . DS . 'BACKUPS',
+            'serverDataDirectory' => 'C:' . DS . 'SERVER' . DS . 'INSTANCES',
+            'serverBaseDirectory' => 'C:' . DS . 'SERVER' . DS . 'LIBS',
         ),
         'Users' => array(
-            'defaultRoleId' => 4,
-            'confirmedRoleId' => 3,
+			// TODO: Move to database
             'registrationEnabled' => true
         )
     )
