@@ -133,16 +133,35 @@ class SEServerComponent extends Component {
 		}
 		if (!$this->games) {
 			$this->games = Configure::read(APP_CONFIG_SCOPE . '.Instances.games');
+			$controller->set(array('games' => $this->getGameList()));
 		}
 		// Create Http Socket oject
 		$this->Http = new HttpSocket();
 	}
 
-	public function getConfigOptions($gameId, $key) {
-		$configOptions = $this->games[$gameId]['configOptions'][$key];
+	public function getConfigOptions($gameId) {
+		$configOptions = $this->games[$gameId]['configOptions'];
 		if (!empty($configOptions)) {
 			return $configOptions;
 		}
+	}
+
+	// Merge in configOptions with retrieved data
+	public function setForm($gameId, $requestData, $model) {
+		$formData[$model] = array_merge(
+			$this->nullArrayValues(array_flip($this->games[$gameId]['configKeys'])),
+			$requestData[$model]
+		);
+		return $formData;
+	}
+	
+	private function __underscore(&$item, $key) {
+		$item = Inflector::underscore($item);
+	}
+
+	// Set all values in array to null
+	function nullArrayValues($array) {
+		return array_map(create_function('$n', 'return null;'), $array);
 	}
 
 	public function getGameList() {
@@ -363,12 +382,15 @@ class SEServerComponent extends Component {
 
 	private function __parseServerAdmins($serverAdmins) {
 		if (!empty($serverAdmins)) {
-			$explodedAdmins = explode("\r\n", $serverAdmins);
+			$explodedAdmins = array_unique(explode("\r\n", $serverAdmins));
 			//	<Administrators>
 			//	  <unsignedLong>76561198031956608</unsignedLong>
 			//	</Administrators>
 			$parsedAdmins = "<Administrators>\r\n";
 			foreach ($explodedAdmins as $admin) {
+				if (!$admin) {
+					continue;
+				}
 				$parsedAdmins .= "\t<unsignedLong>" . $admin . "</unsignedLong>\r\n";
 			}
 			$parsedAdmins .= "  </Administrators>";
@@ -456,8 +478,11 @@ class SEServerComponent extends Component {
 	private function __parseMods($sandboxSbc, $modList) {
 		$modsXml = $sandboxSbc->addChild('Mods');
 		if (!empty($modList)) {
-			$explodedMods = explode("\r\n", $modList);
+			$explodedMods = array_unique(explode("\r\n", $modList));
 			foreach ($explodedMods as $mod) {
+				if (!$mod) {
+					continue;
+				}
 				$modItem = $modsXml->addChild('ModItem');
 				$modItem->addChild('Name', $mod . '.sbm');
 				$modItem->addChild('PublishedFileId', $mod);

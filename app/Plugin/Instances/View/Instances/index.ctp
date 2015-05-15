@@ -41,7 +41,7 @@
 						<?php echo $this->Html->link('<span class="glyphicon glyphicon-repeat btn-xs"></span>', array('action' => 'check', $instance['Instance']['id']), array('escape' => false, 'title' => __('Update Status'))); ?>
 					</td>
 					<td><?php echo h($instance['Instance']['name']); ?>&nbsp;</td>
-					<td><?php echo h($instance['Instance']['game_id']); ?>&nbsp;</td>
+					<td><?php echo h($games[$instance['Instance']['game_id']]); ?>&nbsp;</td>
 					<td><?php echo $this->Html->link($instance['HostServer']['ip'] . ':' . $instance['Instance']['port'], 'steam://connect/' . $instance['HostServer']['ip'] . ':' . $instance['Instance']['port']); ?>&nbsp;</td>
 					<td><?php echo h($instance['InstanceType']['name']); ?>&nbsp;</td>
 					<td><?php echo h($instance['InstanceProfile']['name']); ?>&nbsp;</td>

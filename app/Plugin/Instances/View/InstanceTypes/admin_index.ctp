@@ -32,7 +32,7 @@
 			<?php foreach ($instanceTypes as $instanceType): ?>
 				<tr>
 					<td><?php echo h($instanceType['InstanceType']['name']); ?>&nbsp;</td>
-					<td><?php echo h($instanceType['InstanceType']['game_id']); ?>&nbsp;</td>
+					<td><?php echo h($games[$instanceType['InstanceType']['game_id']]); ?>&nbsp;</td>
 					<td class="actions">
 						<?php echo $this->Html->buttonGroup(
 							array(

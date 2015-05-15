@@ -42,7 +42,7 @@
 				</td>
 				<td><?php echo h($instance['User']['username']); ?>&nbsp;</td>
 				<td><?php echo h($instance['Instance']['name']); ?>&nbsp;</td>
-				<td><?php echo h($instance['Instance']['game_id']); ?>&nbsp;</td>
+				<td><?php echo h($games[$instance['Instance']['game_id']]); ?>&nbsp;</td>
 				<td><?php echo $this->Html->link($instance['HostServer']['ip'] . ':' . $instance['Instance']['port'], 'steam://connect/' . $instance['HostServer']['ip'] . ':' . $instance['Instance']['port']); ?>&nbsp;</td>
 				<td><?php echo h($instance['InstanceType']['name']); ?>&nbsp;</td>
 				<td><?php echo h($instance['InstanceProfile']['name']); ?>&nbsp;</td>

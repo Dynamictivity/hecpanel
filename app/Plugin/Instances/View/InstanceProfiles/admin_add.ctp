@@ -25,6 +25,8 @@ echo $this->Form->create('InstanceProfile', array(
 ?>
 <fieldset>
 	<legend><?php echo __('Admin Add Instance Profile'); ?></legend>
+	<?php echo $this->Form->input('name'); ?>
+	<?php echo $this->Form->input('game_id'); ?>
 	<?php echo $this->Form->buildDynamicForm('InstanceProfile', $this->data); ?>
 </fieldset>
 <div class="form-group">

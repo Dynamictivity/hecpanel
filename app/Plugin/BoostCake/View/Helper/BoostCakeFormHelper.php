@@ -46,7 +46,7 @@ class BoostCakeFormHelper extends FormHelper {
 			if (in_array($field, explode(',', $prohibitedFields))) {
 				continue;
 			}
-			$out .= $this->input($field);
+			$out .= $this->input(Inflector::underscore($field));
 		}
 		return $out;
 	}

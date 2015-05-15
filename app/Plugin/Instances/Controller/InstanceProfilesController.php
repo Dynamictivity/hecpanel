@@ -59,7 +59,7 @@ class InstanceProfilesController extends InstancesAppController {
      *
      * @return void
      */
-    public function add() {
+    public function add($gameId = 0) {
         if ($this->request->is('post')) {
             $this->request->data['InstanceProfile']['user_id'] = AuthComponent::user('id');
             $this->InstanceProfile->create();
@@ -70,10 +70,9 @@ class InstanceProfilesController extends InstancesAppController {
                 $this->setFlash(__('The instance profile could not be saved. Please, try again.'), 'danger');
             }
         }
+		$this->request->data = $this->SEServer->setForm($gameId, $this->request->data, 'InstanceProfile');
         // Set form configuration options
-		// TODO: Create URL variable for game
-		$gameId = 0;
-        $this->set($this->SEServer->getConfigOptions($gameId, 'SessionSettings'));
+        $this->set($this->SEServer->getConfigOptions($gameId));
     }
 
     public function duplicate($id = null) {
@@ -90,14 +89,12 @@ class InstanceProfilesController extends InstancesAppController {
         $this->InstanceProfile->create();
         if ($this->request->is(array('post', 'put'))) {
             if ($this->InstanceProfile->save($this->request->data)) {
-                $this->setFlash(__('The instance profile has been saved.'));
+                $this->setFlash(__('The instance profile has been duplicated.'));
                 return $this->redirect(array('action' => 'index'));
             } else {
-                $this->setFlash(__('The instance profile could not be saved. Please, try again.'), 'danger');
+                $this->setFlash(__('The instance profile could not be duplicated. Please, try again.'), 'danger');
+                return $this->redirect(array('action' => 'index'));
             }
-        } else {
-            $options = array('conditions' => array('InstanceProfile.' . $this->InstanceProfile->primaryKey => $id));
-            $this->request->data = $this->InstanceProfile->find('first', $options);
         }
         $this->autoRender = false;
     }
@@ -125,10 +122,9 @@ class InstanceProfilesController extends InstancesAppController {
         } else {
             $this->request->data = $this->InstanceProfile->loadProfile($id);
         }
+		$this->request->data = $this->SEServer->setForm($this->request->data['InstanceProfile']['game_id'], $this->request->data, 'InstanceProfile');
         // Set form configuration options
-		// TODO: Create URL variable for game
-		$gameId = 0;
-        $this->set($this->SEServer->getConfigOptions($gameId, 'SessionSettings'));
+        $this->set($this->SEServer->getConfigOptions($this->request->data['InstanceProfile']['game_id']));
     }
 	
 	// Convert old instance profile type to new

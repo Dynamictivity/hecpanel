@@ -188,7 +188,6 @@ class SeServerShell extends AppShell {
 		$this->hostServer = $this->HostServer->findByServername(Configure::read(APP_CONFIG_SCOPE . '.App.servername'));
 	}
 
-	// TODO: Medieval Engineers
 	public function checkForUpdates() {
 		foreach ($this->games as $gameId => $game) {
 			$this->__out('Checking for ' . $game['name'] . ' updates:', 'Started');
@@ -236,7 +235,7 @@ class SeServerShell extends AppShell {
 //		passthru('robocopy "' . $this->serverDataDirectory . '" "' . $this->backupDirectory . '" /MIR');
 //		$this->__out('Instances\' backup completed.');
 //	}
-	// TODO: Medieval Engineers
+
 	public function updateBinaries($gameId) {
 		$this->__out('Updating ' . $this->getGameList()[$gameId] . ' binaries.');
 		// Get updated server binaries
@@ -250,7 +249,6 @@ class SeServerShell extends AppShell {
 		return $this->serverBinariesDirectory . DS . $this->__getGameFolderList()[$gameId];
 	}
 
-	// TODO: Medieval Engineers
 	private function __saveLastUpdated($gameId) {
 		// Set binaries last updated
 		Cache::write(APP_CONFIG_SCOPE . '.Instances.binariesLastUpdated' . '-' . $gameId, $this->binariesLastUpdated[$gameId], 'month');
@@ -261,7 +259,6 @@ class SeServerShell extends AppShell {
 		// Ensure instance list is set
 		$this->__setInstanceList();
 		// Stop main instance (name), force kill
-		// TODO: Medieval Engineers
 		foreach ($this->__getGameDedicatedBinaryList() as $dedicatedBinary) {
 			$this->stop($dedicatedBinary, true);
 		}
@@ -341,7 +338,6 @@ class SeServerShell extends AppShell {
 		$instance = $this->readInstance($instanceId);
 		// TODO: RefreshConfig
 		// Execute instance binary
-		// TODO: Medieval Engineers
 		passthru('start /d "' . $this->__getServerBinariesDirectory($instance['Instance']['game_id']) . DS . 'DedicatedServer64" ' . $instanceId . '.exe -noconsole -path "' . $this->serverDataDirectory . DS . $this->readInstance($instanceId)['User']['username'] . DS . $instanceId . DS . '"');
 		$this->__out($instanceId . ' is starting up.');
 	}
@@ -363,7 +359,6 @@ class SeServerShell extends AppShell {
 		$this->__out($instanceId . ' is backed up.');
 	}
 
-	// TODO: Medieval Engineers
 	public function update($instanceId) {
 		// Read instance
 		$instance = $this->readInstance($instanceId);

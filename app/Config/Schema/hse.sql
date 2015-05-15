@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 03, 2015 at 05:33 AM
+-- Generation Time: May 15, 2015 at 09:33 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.5.24
 
@@ -44,7 +44,14 @@ CREATE TABLE IF NOT EXISTS `command_queues` (
   `last_executed_host_server_id` varchar(36) DEFAULT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `command_queues`
+--
+
+INSERT INTO `command_queues` (`id`, `command`, `host_server_id`, `is_recurring`, `time`, `is_once_per_day`, `is_enabled`, `last_executed`, `last_executed_host_server_id`, `created`, `updated`) VALUES
+(1, 'checkForUpdates', '554711b5-9254-49bb-a8c3-114c3924d99f', 1, '00:00:00', 0, 1, '2015-05-15 00:08:10', '554711b5-9254-49bb-a8c3-114c3924d99f', '2015-05-04 08:29:31', '2015-05-11 08:13:34');
 
 -- --------------------------------------------------------
 
@@ -60,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `configurations` (
   `value` varchar(255) NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `configurations`
@@ -72,7 +79,19 @@ INSERT INTO `configurations` (`id`, `name`, `configuration_scope`, `role_id`, `v
 (3, 'serviceAdminId', 'Hecpanel.App', NULL, '53eef38e-c88c-4f8a-bd9a-09948468e7ff', '2015-02-03 08:10:48', '2015-02-03 08:10:48'),
 (4, 'allowedActions', 'Hecpanel.Controller.InstanceProfiles', 3, 'edit,add,delete,index,duplicate', '2014-11-11 09:42:38', '2015-05-03 04:29:32'),
 (5, 'allowedActions', 'Hecpanel.Controller.Instances', 3, 'index,start,stop,cycle,check,add,edit,reroll,instance_log', '2014-11-11 09:27:36', '2014-11-17 00:31:34'),
-(6, 'allowedActions', 'Hecpanel.Controller.Users', 3, 'edit', '2014-11-29 11:28:32', '2014-11-29 11:28:32');
+(6, 'allowedActions', 'Hecpanel.Controller.Users', 3, 'edit', '2014-11-29 11:28:32', '2014-11-29 11:28:32'),
+(7, 'prohibitedFields', 'Hecpanel.Form.InstanceProfile', NULL, 'name,game_id,server_admins,user_id,server_port,server_name,world_name,group_id,load_world,pause_game_when_empty,ignore_last_session,auto_save_in_minutes,max_players,online_mode,created,updated', '2015-05-14 09:14:13', '2015-05-15 08:54:50'),
+(8, 'appUrl', 'Hecpanel.App', NULL, 'http://demo.hecpanel.com', '2015-05-14 09:46:05', '2015-05-14 09:46:05'),
+(9, 'appName', 'Hecpanel.App', NULL, 'HEcPanel', '2015-05-14 09:46:35', '2015-05-14 09:46:35'),
+(10, 'environment', 'Hecpanel.App', NULL, 'DEV', '2015-05-14 09:47:00', '2015-05-14 09:47:00'),
+(11, 'googleAnalyticsId', 'Hecpanel.App', NULL, 'UA-5187184-20', '2015-05-14 09:47:58', '2015-05-14 09:47:58'),
+(12, 'allowedActions', 'Hecpanel.Controller.Users', NULL, 'signup,confirm,logout,login,forgot,reset,eula', '2015-05-14 09:49:24', '2015-05-14 09:49:24'),
+(13, 'newAccountSubject', 'Hecpanel.Email', NULL, 'Welcome to the Hosting Engineers Control Panel', '2015-05-14 09:50:00', '2015-05-14 09:50:00'),
+(14, 'newInstanceSubject', 'Hecpanel.Email', NULL, 'Your Hosting Engineers Server Instance is Created', '2015-05-14 09:50:18', '2015-05-14 09:50:18'),
+(15, 'resetAccountSubject', 'Hecpanel.Email', NULL, 'Reset Your Hosting Engineers Control Panel Password', '2015-05-14 09:50:34', '2015-05-14 09:50:34'),
+(16, 'defaultRoleId', 'Hecpanel.Users', NULL, '4', '2015-05-14 09:51:18', '2015-05-14 09:51:18'),
+(17, 'confirmedRoleId', 'Hecpanel.Users', NULL, '3', '2015-05-14 09:51:36', '2015-05-14 09:51:36'),
+(18, 'prohibitedFields', 'Hecpanel.Form.InstanceType', NULL, 'name,game_id,load_world,server_port,server_admins,group_id,server_name,world_name,created,updated', '2015-05-15 08:20:09', '2015-05-15 09:05:46');
 
 -- --------------------------------------------------------
 
@@ -101,6 +120,7 @@ CREATE TABLE IF NOT EXISTS `instances` (
   `id` varchar(36) NOT NULL,
   `user_id` varchar(36) NOT NULL,
   `host_server_id` varchar(36) NOT NULL,
+  `game_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `group_id` bigint(20) NOT NULL DEFAULT '0',
   `server_admins` text NOT NULL,
@@ -122,40 +142,8 @@ CREATE TABLE IF NOT EXISTS `instance_profiles` (
   `id` varchar(36) NOT NULL,
   `name` varchar(255) NOT NULL,
   `user_id` varchar(36) NOT NULL,
-  `game_mode` varchar(255) NOT NULL,
-  `inventory_size_multiplier` decimal(4,2) NOT NULL,
-  `assembler_speed_multiplier` decimal(4,2) NOT NULL,
-  `assembler_efficiency_multiplier` decimal(4,2) NOT NULL,
-  `refinery_speed_multiplier` decimal(4,2) NOT NULL,
-  `online_mode` varchar(255) NOT NULL,
-  `max_floating_objects` int(11) NOT NULL,
-  `environment_hostility` varchar(255) NOT NULL,
-  `auto_healing` varchar(255) NOT NULL,
-  `enable_copy_paste` varchar(255) NOT NULL,
-  `auto_save` varchar(255) NOT NULL,
-  `weapons_enabled` varchar(255) NOT NULL,
-  `show_player_names_on_hud` varchar(255) NOT NULL,
-  `thruster_damage` varchar(255) NOT NULL,
-  `cargo_ships_enabled` varchar(255) NOT NULL,
-  `enable_spectator` varchar(255) NOT NULL,
-  `remove_trash` varchar(255) NOT NULL,
-  `world_size_km` int(11) NOT NULL,
-  `respawn_ship_delete` varchar(255) NOT NULL,
-  `reset_ownership` varchar(255) NOT NULL,
-  `welder_speed_multiplier` decimal(4,2) NOT NULL,
-  `grinder_speed_multiplier` decimal(4,2) NOT NULL,
-  `realistic_sound` varchar(255) NOT NULL,
-  `client_can_save` varchar(255) NOT NULL,
-  `hack_speed_multiplier` decimal(4,2) NOT NULL,
-  `permanent_death` varchar(255) NOT NULL,
-  `spawn_ship_time_multiplier` decimal(4,2) NOT NULL,
-  `procedural_density` decimal(3,2) NOT NULL,
-  `procedural_seed` bigint(20) NOT NULL,
-  `destructible_blocks` varchar(255) NOT NULL,
-  `enable_ingame_scripts` varchar(255) NOT NULL,
-  `enable_oxygen` varchar(255) NOT NULL,
-  `view_distance` int(11) NOT NULL,
-  `scenario_subtype_id` varchar(255) NOT NULL,
+  `game_id` int(11) NOT NULL,
+  `profile_settings` text NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -169,45 +157,8 @@ CREATE TABLE IF NOT EXISTS `instance_profiles` (
 CREATE TABLE IF NOT EXISTS `instance_types` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `game_mode` varchar(255) NOT NULL,
-  `inventory_size_multiplier` decimal(4,2) NOT NULL,
-  `assembler_speed_multiplier` decimal(4,2) NOT NULL,
-  `assembler_efficiency_multiplier` decimal(4,2) NOT NULL,
-  `refinery_speed_multiplier` decimal(4,2) NOT NULL,
-  `online_mode` varchar(255) NOT NULL,
-  `max_players` int(11) NOT NULL,
-  `max_floating_objects` int(11) NOT NULL,
-  `environment_hostility` varchar(255) NOT NULL,
-  `auto_healing` varchar(255) NOT NULL,
-  `enable_copy_paste` varchar(255) NOT NULL,
-  `auto_save` varchar(255) NOT NULL,
-  `weapons_enabled` varchar(255) NOT NULL,
-  `show_player_names_on_hud` varchar(255) NOT NULL,
-  `thruster_damage` varchar(255) NOT NULL,
-  `cargo_ships_enabled` varchar(255) NOT NULL,
-  `enable_spectator` varchar(255) NOT NULL,
-  `remove_trash` varchar(255) NOT NULL,
-  `world_size_km` int(11) NOT NULL,
-  `respawn_ship_delete` varchar(255) NOT NULL,
-  `reset_ownership` varchar(255) NOT NULL,
-  `welder_speed_multiplier` decimal(4,2) NOT NULL,
-  `grinder_speed_multiplier` decimal(4,2) NOT NULL,
-  `realistic_sound` varchar(255) NOT NULL,
-  `client_can_save` varchar(255) NOT NULL,
-  `hack_speed_multiplier` decimal(4,2) NOT NULL,
-  `permanent_death` varchar(255) NOT NULL,
-  `auto_save_in_minutes` int(11) NOT NULL,
-  `spawn_ship_time_multiplier` decimal(4,2) NOT NULL,
-  `procedural_density` decimal(3,2) NOT NULL,
-  `procedural_seed` bigint(20) NOT NULL,
-  `destructible_blocks` varchar(255) NOT NULL,
-  `enable_ingame_scripts` varchar(255) NOT NULL,
-  `enable_oxygen` varchar(255) NOT NULL,
-  `view_distance` int(11) NOT NULL,
-  `scenario_subtype_id` varchar(255) NOT NULL,
-  `asteroid_amount` int(11) NOT NULL,
-  `pause_game_when_empty` varchar(255) NOT NULL,
-  `ignore_last_session` varchar(255) NOT NULL,
+  `game_id` int(11) NOT NULL,
+  `profile_settings` text NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
@@ -216,10 +167,10 @@ CREATE TABLE IF NOT EXISTS `instance_types` (
 -- Dumping data for table `instance_types`
 --
 
-INSERT INTO `instance_types` (`id`, `name`, `game_mode`, `inventory_size_multiplier`, `assembler_speed_multiplier`, `assembler_efficiency_multiplier`, `refinery_speed_multiplier`, `online_mode`, `max_players`, `max_floating_objects`, `environment_hostility`, `auto_healing`, `enable_copy_paste`, `auto_save`, `weapons_enabled`, `show_player_names_on_hud`, `thruster_damage`, `cargo_ships_enabled`, `enable_spectator`, `remove_trash`, `world_size_km`, `respawn_ship_delete`, `reset_ownership`, `welder_speed_multiplier`, `grinder_speed_multiplier`, `realistic_sound`, `client_can_save`, `hack_speed_multiplier`, `permanent_death`, `auto_save_in_minutes`, `spawn_ship_time_multiplier`, `procedural_density`, `procedural_seed`, `destructible_blocks`, `enable_ingame_scripts`, `enable_oxygen`, `view_distance`, `scenario_subtype_id`, `asteroid_amount`, `pause_game_when_empty`, `ignore_last_session`, `created`, `updated`) VALUES
-(1, 'Small Server', 'Survival', '1.00', '1.00', '1.00', '1.00', 'PUBLIC', 5, 255, 'SAFE', 'true', 'false', 'true', 'true', 'true', 'true', 'false', 'false', 'true', 20, 'true', 'false', '1.00', '1.00', 'false', 'true', '0.33', 'true', 20, '1.00', '0.00', 0, 'true', 'true', 'true', 2000, 'EasyStart1', 10, 'true', 'false', '2014-11-02 12:23:14', '2014-11-12 07:54:37'),
-(2, 'Medium Server', 'Survival', '1.00', '1.00', '1.00', '1.00', 'PUBLIC', 10, 255, 'SAFE', 'true', 'false', 'true', 'true', 'true', 'true', 'false', 'false', 'true', 20, 'true', 'false', '1.00', '1.00', 'false', 'true', '0.33', 'true', 20, '1.00', '0.00', 0, 'true', 'true', 'true', 2000, 'EasyStart1', 10, 'true', 'false', '2014-11-02 12:23:14', '2014-11-12 08:14:41'),
-(3, 'Large Server', 'Survival', '1.00', '1.00', '1.00', '1.00', 'PUBLIC', 15, 255, 'SAFE', 'true', 'false', 'true', 'true', 'true', 'true', 'false', 'false', 'true', 20, 'true', 'false', '1.00', '1.00', 'false', 'true', '0.33', 'true', 20, '1.00', '0.00', 0, 'true', 'true', 'true', 2000, 'EasyStart1', 10, 'true', 'false', '2014-11-02 12:23:14', '2014-11-12 07:54:16');
+INSERT INTO `instance_types` (`id`, `name`, `game_id`, `profile_settings`, `created`, `updated`) VALUES
+(1, 'Small Server', 0, '{"game_mode":"Survival","inventory_size_multiplier":"1","assembler_speed_multiplier":"1","assembler_efficiency_multiplier":"1","refinery_speed_multiplier":"1","online_mode":"PUBLIC","max_players":"1","max_floating_objects":"0","environment_hostility":"SAFE","auto_healing":"true","enable_copy_paste":"true","auto_save":"true","weapons_enabled":"true","show_player_names_on_hud":"true","thruster_damage":"true","cargo_ships_enabled":"false","enable_spectator":"true","remove_trash":"true","world_size_km":"0","respawn_ship_delete":"true","reset_ownership":"true","welder_speed_multiplier":"1","grinder_speed_multiplier":"1","realistic_sound":"true","client_can_save":"true","hack_speed_multiplier":"1","permanent_death":"true","auto_save_in_minutes":"15","spawn_ship_time_multiplier":"0","procedural_density":"0","procedural_seed":"0","destructible_blocks":"true","enable_ingame_scripts":"true","enable_oxygen":"true","view_distance":"1000","scenario_subtype_id":"EasyStart1","asteroid_amount":"0","pause_game_when_empty":"true","ignore_last_session":"true","enable_tool_shake":"true","enable_3rd_person_view":"true","enable_encounters":"true"}', '2014-11-02 12:23:14', '2015-05-15 09:31:14'),
+(2, 'Medium Server', 0, '{"game_mode":"Survival","inventory_size_multiplier":"1","assembler_speed_multiplier":"1","assembler_efficiency_multiplier":"1","refinery_speed_multiplier":"1","online_mode":"PUBLIC","max_players":"10","max_floating_objects":"255","environment_hostility":"SAFE","auto_healing":"true","enable_copy_paste":"false","auto_save":"true","weapons_enabled":"true","show_player_names_on_hud":"true","thruster_damage":"true","cargo_ships_enabled":"false","enable_spectator":"false","remove_trash":"true","world_size_km":"20","respawn_ship_delete":"true","reset_ownership":"false","welder_speed_multiplier":"1","grinder_speed_multiplier":"1","realistic_sound":"false","client_can_save":"true","hack_speed_multiplier":"1","permanent_death":"true","auto_save_in_minutes":"15","spawn_ship_time_multiplier":"1","procedural_density":"0","procedural_seed":"0","destructible_blocks":"true","enable_ingame_scripts":"true","enable_oxygen":"true","view_distance":"2000","scenario_subtype_id":"EasyStart1","asteroid_amount":"10","pause_game_when_empty":"true","ignore_last_session":"false","enable_tool_shake":"true","enable_3rd_person_view":"true","enable_encounters":"true"}', '2014-11-02 12:23:14', '2015-05-15 09:18:43'),
+(3, 'Large Server', 0, '{"game_mode":"Survival","inventory_size_multiplier":"1","assembler_speed_multiplier":"1","assembler_efficiency_multiplier":"1","refinery_speed_multiplier":"1","online_mode":"PUBLIC","max_players":"15","max_floating_objects":"255","environment_hostility":"SAFE","auto_healing":"true","enable_copy_paste":"false","auto_save":"true","weapons_enabled":"true","show_player_names_on_hud":"true","thruster_damage":"true","cargo_ships_enabled":"false","enable_spectator":"false","remove_trash":"true","world_size_km":"20","respawn_ship_delete":"true","reset_ownership":"false","welder_speed_multiplier":"1","grinder_speed_multiplier":"1","realistic_sound":"false","client_can_save":"true","hack_speed_multiplier":"1","permanent_death":"true","auto_save_in_minutes":"15","spawn_ship_time_multiplier":"1","procedural_density":"0","procedural_seed":"0","destructible_blocks":"true","enable_ingame_scripts":"true","enable_oxygen":"true","view_distance":"2000","scenario_subtype_id":"EasyStart1","asteroid_amount":"10","pause_game_when_empty":"true","ignore_last_session":"false","enable_tool_shake":"true","enable_3rd_person_view":"true","enable_encounters":"true"}', '2014-11-02 12:23:14', '2015-05-15 09:18:49');
 
 -- --------------------------------------------------------
 
@@ -294,6 +245,12 @@ ALTER TABLE `configurations`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `host_servers`
+--
+ALTER TABLE `host_servers`
+  ADD UNIQUE KEY `id` (`id`);
+
+--
 -- Indexes for table `instances`
 --
 ALTER TABLE `instances`
@@ -331,12 +288,12 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `command_queues`
 --
 ALTER TABLE `command_queues`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `configurations`
 --
 ALTER TABLE `configurations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=19;
 --
 -- AUTO_INCREMENT for table `instance_types`
 --

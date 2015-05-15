@@ -111,124 +111,135 @@ Configure::write(APP_CONFIG_SCOPE . '.Instances.games', array(
 		'config' => 'SpaceEngineers-Dedicated.cfg',
 		'dedicatedBinary' => 'SpaceEngineersDedicated.exe',
 		'sourceBinariesDirectory' => 'C:' . DS . 'Program Files (x86)' . DS . 'Steam' . DS . 'SteamApps' . DS . 'common' . DS . 'SpaceEngineers',
+		'configKeys' => array('game_mode', 'inventory_size_multiplier', 'assembler_speed_multiplier', 'assembler_efficiency_multiplier', 'refinery_speed_multiplier', 'online_mode', 'max_players', 'max_floating_objects', 'environment_hostility', 'auto_healing', 'enable_copy_paste', 'auto_save', 'weapons_enabled', 'show_player_names_on_hud', 'thruster_damage', 'cargo_ships_enabled', 'enable_spectator', 'remove_trash', 'world_size_km', 'respawn_ship_delete', 'reset_ownership', 'welder_speed_multiplier', 'grinder_speed_multiplier', 'realistic_sound', 'client_can_save', 'hack_speed_multiplier', 'permanent_death', 'auto_save_in_minutes', 'spawn_ship_time_multiplier', 'procedural_density', 'procedural_seed', 'destructible_blocks', 'enable_ingame_scripts', 'enable_oxygen', 'view_distance', 'scenario_subtype_id', 'load_world', 'server_port', 'asteroid_amount', 'server_admins', 'group_id', 'server_name', 'world_name', 'pause_game_when_empty', 'ignore_last_session', 'enable_tool_shake', 'enable_3rd_person_view', 'enable_encounters'),
 		'configOptions' => array(
-			'SessionSettings' => array(
-				'gameModes' => array(
-					'Survival' => 'Survival',
-					'Creative' => 'Creative'
-				),
-				'onlineModes' => array(
-					'PUBLIC' => 'PUBLIC',
-					'PRIVATE' => 'PRIVATE'
-				),
-				'environmentHostilities' => array(
-					'SAFE' => 'SAFE',
-					'NORMAL' => 'NORMAL',
-					'CATACLYSM' => 'CATACLYSM',
-					'CATACLYSM_UNREAL' => 'CATACLYSM_UNREAL'
-				),
-				'autoHealings' => array(
-					'true' => 'true',
-					'false' => 'false'
-				),
-				'enableCopyPastes' => array(
-					'true' => 'true',
-					'false' => 'false'
-				),
-				'autoSaves' => array(
-					'true' => 'true',
-					'false' => 'false'
-				),
-				'weaponsEnableds' => array(
-					'true' => 'true',
-					'false' => 'false'
-				),
-				'showPlayerNamesOnHuds' => array(
-					'true' => 'true',
-					'false' => 'false'
-				),
-				'thrusterDamages' => array(
-					'true' => 'true',
-					'false' => 'false'
-				),
-				'cargoShipsEnableds' => array(
-					'true' => 'true',
-					'false' => 'false'
-				),
-				'enableSpectators' => array(
-					'true' => 'true',
-					'false' => 'false'
-				),
-				'removeTrashes' => array(
-					'true' => 'true',
-					'false' => 'false'
-				),
-				'respawnShipDeletes' => array(
-					'true' => 'true',
-					'false' => 'false'
-				),
-				'resetOwnerships' => array(
-					'true' => 'true',
-					'false' => 'false'
-				),
-				'realisticSounds' => array(
-					'true' => 'true',
-					'false' => 'false'
-				),
-				'clientCanSaves' => array(
-					'true' => 'true',
-					'false' => 'false'
-				),
-				'permanentDeaths' => array(
-					'true' => 'true',
-					'false' => 'false'
-				),
-				'pauseGameWhenEmpties' => array(
-					'true' => 'true',
-					'false' => 'false'
-				),
-				'ignoreLastSessions' => array(
-					'true' => 'true',
-					'false' => 'false'
-				),
-				'destructibleBlocks' => array(
-					'true' => 'true',
-					'false' => 'false'
-				),
-				'enableIngameScripts' => array(
-					'true' => 'true',
-					'false' => 'false'
-				),
-				'enableOxygens' => array(
-					'true' => 'true',
-					'false' => 'false'
-				),
-				'scenarioSubtypes' => array(
-					'EasyStart1' => 'EasyStart1',
-					'EasyStart2' => 'EasyStart2',
-					'Survival' => 'Survival',
-					'CrashedRedShip' => 'CrashedRedShip',
-					'TwoPlatforms' => 'TwoPlatforms',
-					'Asteroids' => 'Asteroids',
-					'EmptyWorld' => 'EmptyWorld'
-				),
-				'inventorySizeMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
-				'assemblerSpeedMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
-				'assemblerEfficiencyMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
-				'refinerySpeedMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
-				'maxPlayers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
-				'maxFloatingObjects' => array_combine(range(0, 500, 1), range(0, 500, 1)), // 0-500, increment of 1
-				'worldSizeKms' => array_combine(range(0, 500, 1), range(0, 500, 1)), // 0-500, increment of 1
-				'welderSpeedMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
-				'grinderSpeedMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
-				'hackSpeedMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
-				'autoSaveInMinutes' => array_combine(range(15, 90, 15), range(15, 90, 15)), // 15-90, increment of 15
-				'spawnShipTimeMultipliers' => array_combine(range(0, 20, 1), range(0, 20, 1)), // 0-20, increment of 1
-				'asteroidAmounts' => array_combine(range(0, 10, 1), range(0, 10, 1)), // 0-10, increment of 1
-				'proceduralDensities' => array_combine(range(0, 1, .05), range(0, 1, .05)), // 0-1, increment of .05
-				'viewDistances' => array_combine(range(1000, 30000, 1000), range(1000, 30000, 1000)), // 1000-30000, increment of 1000
+			'gameModes' => array(
+				'Survival' => 'Survival',
+				'Creative' => 'Creative'
 			),
-		)
+			'onlineModes' => array(
+				'PUBLIC' => 'PUBLIC',
+				'PRIVATE' => 'PRIVATE'
+			),
+			'environmentHostilities' => array(
+				'SAFE' => 'SAFE',
+				'NORMAL' => 'NORMAL',
+				'CATACLYSM' => 'CATACLYSM',
+				'CATACLYSM_UNREAL' => 'CATACLYSM_UNREAL'
+			),
+			'autoHealings' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'enableCopyPastes' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'autoSaves' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'weaponsEnableds' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'showPlayerNamesOnHuds' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'thrusterDamages' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'cargoShipsEnableds' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'enableSpectators' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'removeTrashes' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'respawnShipDeletes' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'resetOwnerships' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'realisticSounds' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'clientCanSaves' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'permanentDeaths' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'pauseGameWhenEmpties' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'ignoreLastSessions' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'destructibleBlocks' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'enableIngameScripts' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'enableOxygens' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'enableToolShakes' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'enable3rdPersonViews' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'enableEncounters' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'scenarioSubtypes' => array(
+				'EasyStart1' => 'EasyStart1',
+				'EasyStart2' => 'EasyStart2',
+				'Survival' => 'Survival',
+				'CrashedRedShip' => 'CrashedRedShip',
+				'TwoPlatforms' => 'TwoPlatforms',
+				'Asteroids' => 'Asteroids',
+				'EmptyWorld' => 'EmptyWorld'
+			),
+			'inventorySizeMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
+			'assemblerSpeedMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
+			'assemblerEfficiencyMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
+			'refinerySpeedMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
+			'maxPlayers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
+			'maxFloatingObjects' => array_combine(range(0, 500, 1), range(0, 500, 1)), // 0-500, increment of 1
+			'worldSizeKms' => array_combine(range(0, 500, 1), range(0, 500, 1)), // 0-500, increment of 1
+			'welderSpeedMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
+			'grinderSpeedMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
+			'hackSpeedMultipliers' => array_combine(range(.2, 100, .2), range(.2, 100, .2)), // .2-100, increment of .2
+			'autoSaveInMinutes' => array_combine(range(15, 90, 15), range(15, 90, 15)), // 15-90, increment of 15
+			'spawnShipTimeMultipliers' => array_combine(range(0, 20, 1), range(0, 20, 1)), // 0-20, increment of 1
+			'asteroidAmounts' => array_combine(range(0, 10, 1), range(0, 10, 1)), // 0-10, increment of 1
+			'proceduralDensities' => array_combine(range(0, 1, .05), range(0, 1, .05)), // 0-1, increment of .05
+			'viewDistances' => array_combine(range(1000, 30000, 1000), range(1000, 30000, 1000)), // 1000-30000, increment of 1000
+		),
 	),
 	array(
 		'name' => 'Medieval Engineers',
