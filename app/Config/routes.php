@@ -45,10 +45,12 @@ Router::connect('/account/reset/*', array('controller' => 'users', 'action' => '
 Router::connect('/account/confirm/*', array('controller' => 'users', 'action' => 'confirm', 'plugin' => false, 'admin' => false));
 
 Router::connect('/instances', array('controller' => 'instances', 'action' => 'index', 'plugin' => 'instances', 'admin' => false));
-Router::connect('/instances/add', array('controller' => 'instances', 'action' => 'add', 'plugin' => 'instances', 'admin' => false));
+//Router::connect('/instances/add', array('controller' => 'instances', 'action' => 'add', 'plugin' => 'instances', 'admin' => false));
 
 Router::connect('/instance_profiles', array('controller' => 'instance_profiles', 'action' => 'index', 'plugin' => 'instances', 'admin' => false));
 Router::connect('/instance_profiles/add', array('controller' => 'instance_profiles', 'action' => 'add', 'plugin' => 'instances', 'admin' => false));
+Router::connect('/instance_profiles/add/*', array('controller' => 'instance_profiles', 'action' => 'add', 'plugin' => 'instances', 'admin' => false));
+Router::connect('/instance_profiles/edit/*', array('controller' => 'instance_profiles', 'action' => 'edit', 'plugin' => 'instances', 'admin' => false));
 
 Router::connect('/admin', array('controller' => 'instances', 'action' => 'index', 'plugin' => 'instances', 'admin' => true));
 

@@ -59,8 +59,12 @@ class InstanceProfilesController extends InstancesAppController {
      *
      * @return void
      */
-    public function add($gameId = 0) {
-        if ($this->request->is('post')) {
+    public function add($gameId = null) {
+		if ($gameId < 0 || $gameId === null) {
+			throw new NotFoundException(__('Invalid game selected'));
+		}
+        $this->request->data['InstanceProfile']['game_id'] = $gameId;
+		if ($this->request->is('post')) {
             $this->request->data['InstanceProfile']['user_id'] = AuthComponent::user('id');
             $this->InstanceProfile->create();
             if ($this->InstanceProfile->saveProfile($this->request->data)) {

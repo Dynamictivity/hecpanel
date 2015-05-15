@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: May 15, 2015 at 09:33 AM
+-- Generation Time: May 16, 2015 at 01:42 AM
 -- Server version: 5.6.24
 -- PHP Version: 5.5.24
 
@@ -26,6 +26,14 @@ CREATE TABLE IF NOT EXISTS `cake_sessions` (
   `expires` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `cake_sessions`
+--
+
+INSERT INTO `cake_sessions` (`id`, `data`, `expires`) VALUES
+('8s02h9dggfk4kf6h20nqnn9a54', 'Config|a:3:{s:9:"userAgent";s:32:"71596e995dcea4b606fe3b711d1ad643";s:4:"time";i:1431747701;s:9:"countdown";i:10;}Message|a:0:{}Auth|a:1:{s:4:"User";a:13:{s:2:"id";s:36:"53eef38e-c88c-4f8a-bd9a-09948468e7ff";s:8:"username";s:8:"hecadmin";s:10:"first_name";s:8:"HEcPanel";s:9:"last_name";s:5:"Admin";s:5:"email";s:21:"hecadmin@hecpanel.com";s:5:"token";N;s:7:"role_id";s:1:"1";s:18:"desired_product_id";N;s:13:"eula_accepted";b:1;s:7:"created";s:19:"2014-08-16 08:00:46";s:7:"updated";s:19:"2015-05-03 02:22:35";s:4:"name";s:14:"HEcPanel Admin";s:4:"Role";a:2:{s:2:"id";s:1:"1";s:4:"name";s:13:"Administrator";}}}', 1431747702),
+('mnjfnvtkjfdrvin2blbpof5a00', 'Config|a:3:{s:9:"userAgent";s:32:"71596e995dcea4b606fe3b711d1ad643";s:4:"time";i:1431696382;s:9:"countdown";i:10;}Message|a:0:{}Auth|a:1:{s:4:"User";a:13:{s:2:"id";s:36:"53eef38e-c88c-4f8a-bd9a-09948468e7ff";s:8:"username";s:8:"hecadmin";s:10:"first_name";s:8:"HEcPanel";s:9:"last_name";s:5:"Admin";s:5:"email";s:21:"hecadmin@hecpanel.com";s:5:"token";N;s:7:"role_id";s:1:"1";s:18:"desired_product_id";N;s:13:"eula_accepted";b:1;s:7:"created";s:19:"2014-08-16 08:00:46";s:7:"updated";s:19:"2015-05-03 02:22:35";s:4:"name";s:14:"HEcPanel Admin";s:4:"Role";a:2:{s:2:"id";s:1:"1";s:4:"name";s:13:"Administrator";}}}', 1431696382);
+
 -- --------------------------------------------------------
 
 --
@@ -44,14 +52,7 @@ CREATE TABLE IF NOT EXISTS `command_queues` (
   `last_executed_host_server_id` varchar(36) DEFAULT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `command_queues`
---
-
-INSERT INTO `command_queues` (`id`, `command`, `host_server_id`, `is_recurring`, `time`, `is_once_per_day`, `is_enabled`, `last_executed`, `last_executed_host_server_id`, `created`, `updated`) VALUES
-(1, 'checkForUpdates', '554711b5-9254-49bb-a8c3-114c3924d99f', 1, '00:00:00', 0, 1, '2015-05-15 00:08:10', '554711b5-9254-49bb-a8c3-114c3924d99f', '2015-05-04 08:29:31', '2015-05-11 08:13:34');
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -161,16 +162,19 @@ CREATE TABLE IF NOT EXISTS `instance_types` (
   `profile_settings` text NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `instance_types`
 --
 
 INSERT INTO `instance_types` (`id`, `name`, `game_id`, `profile_settings`, `created`, `updated`) VALUES
-(1, 'Small Server', 0, '{"game_mode":"Survival","inventory_size_multiplier":"1","assembler_speed_multiplier":"1","assembler_efficiency_multiplier":"1","refinery_speed_multiplier":"1","online_mode":"PUBLIC","max_players":"1","max_floating_objects":"0","environment_hostility":"SAFE","auto_healing":"true","enable_copy_paste":"true","auto_save":"true","weapons_enabled":"true","show_player_names_on_hud":"true","thruster_damage":"true","cargo_ships_enabled":"false","enable_spectator":"true","remove_trash":"true","world_size_km":"0","respawn_ship_delete":"true","reset_ownership":"true","welder_speed_multiplier":"1","grinder_speed_multiplier":"1","realistic_sound":"true","client_can_save":"true","hack_speed_multiplier":"1","permanent_death":"true","auto_save_in_minutes":"15","spawn_ship_time_multiplier":"0","procedural_density":"0","procedural_seed":"0","destructible_blocks":"true","enable_ingame_scripts":"true","enable_oxygen":"true","view_distance":"1000","scenario_subtype_id":"EasyStart1","asteroid_amount":"0","pause_game_when_empty":"true","ignore_last_session":"true","enable_tool_shake":"true","enable_3rd_person_view":"true","enable_encounters":"true"}', '2014-11-02 12:23:14', '2015-05-15 09:31:14'),
-(2, 'Medium Server', 0, '{"game_mode":"Survival","inventory_size_multiplier":"1","assembler_speed_multiplier":"1","assembler_efficiency_multiplier":"1","refinery_speed_multiplier":"1","online_mode":"PUBLIC","max_players":"10","max_floating_objects":"255","environment_hostility":"SAFE","auto_healing":"true","enable_copy_paste":"false","auto_save":"true","weapons_enabled":"true","show_player_names_on_hud":"true","thruster_damage":"true","cargo_ships_enabled":"false","enable_spectator":"false","remove_trash":"true","world_size_km":"20","respawn_ship_delete":"true","reset_ownership":"false","welder_speed_multiplier":"1","grinder_speed_multiplier":"1","realistic_sound":"false","client_can_save":"true","hack_speed_multiplier":"1","permanent_death":"true","auto_save_in_minutes":"15","spawn_ship_time_multiplier":"1","procedural_density":"0","procedural_seed":"0","destructible_blocks":"true","enable_ingame_scripts":"true","enable_oxygen":"true","view_distance":"2000","scenario_subtype_id":"EasyStart1","asteroid_amount":"10","pause_game_when_empty":"true","ignore_last_session":"false","enable_tool_shake":"true","enable_3rd_person_view":"true","enable_encounters":"true"}', '2014-11-02 12:23:14', '2015-05-15 09:18:43'),
-(3, 'Large Server', 0, '{"game_mode":"Survival","inventory_size_multiplier":"1","assembler_speed_multiplier":"1","assembler_efficiency_multiplier":"1","refinery_speed_multiplier":"1","online_mode":"PUBLIC","max_players":"15","max_floating_objects":"255","environment_hostility":"SAFE","auto_healing":"true","enable_copy_paste":"false","auto_save":"true","weapons_enabled":"true","show_player_names_on_hud":"true","thruster_damage":"true","cargo_ships_enabled":"false","enable_spectator":"false","remove_trash":"true","world_size_km":"20","respawn_ship_delete":"true","reset_ownership":"false","welder_speed_multiplier":"1","grinder_speed_multiplier":"1","realistic_sound":"false","client_can_save":"true","hack_speed_multiplier":"1","permanent_death":"true","auto_save_in_minutes":"15","spawn_ship_time_multiplier":"1","procedural_density":"0","procedural_seed":"0","destructible_blocks":"true","enable_ingame_scripts":"true","enable_oxygen":"true","view_distance":"2000","scenario_subtype_id":"EasyStart1","asteroid_amount":"10","pause_game_when_empty":"true","ignore_last_session":"false","enable_tool_shake":"true","enable_3rd_person_view":"true","enable_encounters":"true"}', '2014-11-02 12:23:14', '2015-05-15 09:18:49');
+(1, 'SE: Small Server', 0, '{"game_mode":"Survival","inventory_size_multiplier":"1","assembler_speed_multiplier":"1","assembler_efficiency_multiplier":"1","refinery_speed_multiplier":"1","online_mode":"PUBLIC","max_players":"1","max_floating_objects":"0","environment_hostility":"SAFE","auto_healing":"true","enable_copy_paste":"true","auto_save":"true","weapons_enabled":"true","show_player_names_on_hud":"true","thruster_damage":"true","cargo_ships_enabled":"false","enable_spectator":"true","remove_trash":"true","world_size_km":"0","respawn_ship_delete":"true","reset_ownership":"true","welder_speed_multiplier":"1","grinder_speed_multiplier":"1","realistic_sound":"true","client_can_save":"true","hack_speed_multiplier":"1","permanent_death":"true","auto_save_in_minutes":"15","spawn_ship_time_multiplier":"0","procedural_density":"0","procedural_seed":"0","destructible_blocks":"true","enable_ingame_scripts":"true","enable_oxygen":"true","view_distance":"1000","scenario_subtype_id":"EasyStart1","asteroid_amount":"0","pause_game_when_empty":"true","ignore_last_session":"true","enable_tool_shake":"true","enable_3rd_person_view":"true","enable_encounters":"true"}', '2014-11-02 12:23:14', '2015-05-15 09:31:14'),
+(2, 'SE: Medium Server', 0, '{"game_mode":"Survival","inventory_size_multiplier":"1","assembler_speed_multiplier":"1","assembler_efficiency_multiplier":"1","refinery_speed_multiplier":"1","online_mode":"PUBLIC","max_players":"10","max_floating_objects":"255","environment_hostility":"SAFE","auto_healing":"true","enable_copy_paste":"false","auto_save":"true","weapons_enabled":"true","show_player_names_on_hud":"true","thruster_damage":"true","cargo_ships_enabled":"false","enable_spectator":"false","remove_trash":"true","world_size_km":"20","respawn_ship_delete":"true","reset_ownership":"false","welder_speed_multiplier":"1","grinder_speed_multiplier":"1","realistic_sound":"false","client_can_save":"true","hack_speed_multiplier":"1","permanent_death":"true","auto_save_in_minutes":"15","spawn_ship_time_multiplier":"1","procedural_density":"0","procedural_seed":"0","destructible_blocks":"true","enable_ingame_scripts":"true","enable_oxygen":"true","view_distance":"2000","scenario_subtype_id":"EasyStart1","asteroid_amount":"10","pause_game_when_empty":"true","ignore_last_session":"false","enable_tool_shake":"true","enable_3rd_person_view":"true","enable_encounters":"true"}', '2014-11-02 12:23:14', '2015-05-15 09:18:43'),
+(3, 'SE: Large Server', 0, '{"game_mode":"Survival","inventory_size_multiplier":"1","assembler_speed_multiplier":"1","assembler_efficiency_multiplier":"1","refinery_speed_multiplier":"1","online_mode":"PUBLIC","max_players":"15","max_floating_objects":"255","environment_hostility":"SAFE","auto_healing":"true","enable_copy_paste":"false","auto_save":"true","weapons_enabled":"true","show_player_names_on_hud":"true","thruster_damage":"true","cargo_ships_enabled":"false","enable_spectator":"false","remove_trash":"true","world_size_km":"20","respawn_ship_delete":"true","reset_ownership":"false","welder_speed_multiplier":"1","grinder_speed_multiplier":"1","realistic_sound":"false","client_can_save":"true","hack_speed_multiplier":"1","permanent_death":"true","auto_save_in_minutes":"15","spawn_ship_time_multiplier":"1","procedural_density":"0","procedural_seed":"0","destructible_blocks":"true","enable_ingame_scripts":"true","enable_oxygen":"true","view_distance":"2000","scenario_subtype_id":"EasyStart1","asteroid_amount":"10","pause_game_when_empty":"true","ignore_last_session":"false","enable_tool_shake":"true","enable_3rd_person_view":"true","enable_encounters":"true"}', '2014-11-02 12:23:14', '2015-05-15 09:18:49'),
+(4, 'ME: Small Server', 1, '{"enable_structural_simulation":"true","enable_barbarians":"true","max_active_fracture_pieces":"100","game_day_in_real_minutes":"1","day_night_ratio":"0.1","enable_animals":"true","maximum_bots":"1","game_mode":"Survival","max_players":"1","enable_spectator":"true","client_can_save":"true","auto_save_in_minutes":"15","scenario_subtype_id":"Quickstart","pause_game_when_empty":"true","ignore_last_session":"true"}', '2015-05-15 11:12:04', '2015-05-15 11:12:04'),
+(5, 'ME: Medium Server', 1, '{"enable_structural_simulation":"true","enable_barbarians":"true","max_active_fracture_pieces":"100","game_day_in_real_minutes":"1","day_night_ratio":"0.1","enable_animals":"true","maximum_bots":"1","game_mode":"Survival","max_players":"10","enable_spectator":"true","client_can_save":"true","auto_save_in_minutes":"15","scenario_subtype_id":"Quickstart","pause_game_when_empty":"true","ignore_last_session":"true"}', '2015-05-15 11:15:26', '2015-05-15 11:15:26'),
+(6, 'ME: Large Server', 1, '{"enable_structural_simulation":"true","enable_barbarians":"true","max_active_fracture_pieces":"100","game_day_in_real_minutes":"1","day_night_ratio":"0.1","enable_animals":"true","maximum_bots":"1","game_mode":"Survival","max_players":"100","enable_spectator":"true","client_can_save":"true","auto_save_in_minutes":"15","scenario_subtype_id":"Quickstart","pause_game_when_empty":"true","ignore_last_session":"true"}', '2015-05-15 11:15:51', '2015-05-15 11:15:51');
 
 -- --------------------------------------------------------
 
@@ -288,7 +292,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `command_queues`
 --
 ALTER TABLE `command_queues`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `configurations`
 --
@@ -298,7 +302,7 @@ ALTER TABLE `configurations`
 -- AUTO_INCREMENT for table `instance_types`
 --
 ALTER TABLE `instance_types`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `roles`
 --

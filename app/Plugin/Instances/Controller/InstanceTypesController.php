@@ -55,7 +55,11 @@ class InstanceTypesController extends InstancesAppController {
 	 *
 	 * @return void
 	 */
-	public function admin_add($gameId = 0) {
+	public function admin_add($gameId = null) {
+		if ($gameId < 0 || $gameId === null) {
+			throw new NotFoundException(__('Invalid game selected'));
+		}
+        $this->request->data['InstanceType']['game_id'] = $gameId;
 		if ($this->request->is('post')) {
 			$this->InstanceType->create();
 			if ($this->InstanceType->saveProfile($this->request->data)) {

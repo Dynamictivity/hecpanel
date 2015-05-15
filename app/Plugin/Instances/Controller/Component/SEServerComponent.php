@@ -148,6 +148,9 @@ class SEServerComponent extends Component {
 
 	// Merge in configOptions with retrieved data
 	public function setForm($gameId, $requestData, $model) {
+		if (empty($requestData[$model])) {
+			$requestData[$model] = array();
+		}
 		$formData[$model] = array_merge(
 			$this->nullArrayValues(array_flip($this->games[$gameId]['configKeys'])),
 			$requestData[$model]

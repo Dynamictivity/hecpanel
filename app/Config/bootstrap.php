@@ -222,7 +222,7 @@ Configure::write(APP_CONFIG_SCOPE . '.Instances.games', array(
 				'CrashedRedShip' => 'CrashedRedShip',
 				'TwoPlatforms' => 'TwoPlatforms',
 				'Asteroids' => 'Asteroids',
-				'EmptyWorld' => 'EmptyWorld'
+				'EmptyWorld' => 'EmptyWorld',
 			),
 			'inventorySizeMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
 			'assemblerSpeedMultipliers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
@@ -247,6 +247,58 @@ Configure::write(APP_CONFIG_SCOPE . '.Instances.games', array(
 		'config' => 'MedievalEngineers-Dedicated.cfg',
 		'dedicatedBinary' => 'MedievalEngineersDedicated.exe',
 		'sourceBinariesDirectory' => 'C:' . DS . 'Program Files (x86)' . DS . 'Steam' . DS . 'SteamApps' . DS . 'common' . DS . 'MedievalEngineers',
+		'configKeys' => array('enable_structural_simulation', 'enable_barbarians', 'max_active_fracture_pieces', 'game_day_in_real_minutes', 'day_night_ratio', 'enable_animals', 'maximum_bots', 'game_mode', 'max_players', 'enable_spectator', 'client_can_save', 'auto_save_in_minutes', 'scenario_subtype_id', 'load_world', 'server_port', 'server_admins', 'group_id', 'server_name', 'world_name', 'pause_game_when_empty', 'ignore_last_session'),
+		'configOptions' => array(
+			'gameModes' => array(
+				'Survival' => 'Survival',
+				'Creative' => 'Creative'
+			),
+			'clientCanSaves' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'pauseGameWhenEmpties' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'ignoreLastSessions' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'enableStructuralSimulations' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'enableBarbarians' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'enableAnimals' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'enableSpectators' => array(
+				'true' => 'true',
+				'false' => 'false'
+			),
+			'scenarioSubtypes' => array(
+				'Quickstart' => 'Quickstart',
+				'PreviewDestructionM' => 'PreviewDestructionMap',
+				'Plains' => 'Plains',
+				'Castle' => 'Castle',
+				'Bridges' => 'Bridges',
+				'LargeTerrain' => 'LargeTerrain',
+				'NormalTerrain' => 'NormalTerrain',
+				'SmallTerrain' => 'SmallTerrain',
+				'VerySmallTerrain' => 'VerySmallTerrain',
+			),
+			'maxActiveFracturePieces' => array_combine(range(100, 1000, 100), range(100, 1000, 100)), // 100-1000, increment of 100
+			'gameDayInRealMinutes' => array_combine(range(1, 200, 1), range(1, 200, 1)), // 1-200, increment of 1
+			'dayNightRatios' => array_combine(range(.1, 1, .1), range(.1, 1, .1)), // .1-1, increment of .1
+			'maxPlayers' => array_combine(range(1, 100, 1), range(1, 100, 1)), // 1-100, increment of 1
+			'autoSaveInMinutes' => array_combine(range(15, 90, 15), range(15, 90, 15)), // 15-90, increment of 15
+			'maximumBots' => array_combine(range(1, 20, 1), range(1, 20, 1)), // 1-20, increment of 1
+		),
 	),
 ));
 

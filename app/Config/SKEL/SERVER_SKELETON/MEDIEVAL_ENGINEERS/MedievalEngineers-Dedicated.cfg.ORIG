@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<MyConfigDedicated xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SessionSettings>
+    <GameMode>Survival</GameMode>
+    <InventorySizeMultiplier>1</InventorySizeMultiplier>
+    <AssemblerSpeedMultiplier>1</AssemblerSpeedMultiplier>
+    <AssemblerEfficiencyMultiplier>1</AssemblerEfficiencyMultiplier>
+    <RefinerySpeedMultiplier>1</RefinerySpeedMultiplier>
+    <OnlineMode>PUBLIC</OnlineMode>
+    <MaxPlayers>4</MaxPlayers>
+    <MaxFloatingObjects>256</MaxFloatingObjects>
+    <EnvironmentHostility>SAFE</EnvironmentHostility>
+    <AutoHealing>true</AutoHealing>
+    <EnableCopyPaste>false</EnableCopyPaste>
+    <WeaponsEnabled>true</WeaponsEnabled>
+    <ShowPlayerNamesOnHud>true</ShowPlayerNamesOnHud>
+    <ThrusterDamage>true</ThrusterDamage>
+    <CargoShipsEnabled>true</CargoShipsEnabled>
+    <EnableSpectator>true</EnableSpectator>
+    <RemoveTrash>false</RemoveTrash>
+    <WorldSizeKm>0</WorldSizeKm>
+    <RespawnShipDelete>true</RespawnShipDelete>
+    <ResetOwnership>false</ResetOwnership>
+    <WelderSpeedMultiplier>1</WelderSpeedMultiplier>
+    <GrinderSpeedMultiplier>1</GrinderSpeedMultiplier>
+    <RealisticSound>false</RealisticSound>
+    <ClientCanSave>true</ClientCanSave>
+    <HackSpeedMultiplier>0.33</HackSpeedMultiplier>
+    <PermanentDeath>true</PermanentDeath>
+    <AutoSaveInMinutes>5</AutoSaveInMinutes>
+    <SpawnShipTimeMultiplier>1</SpawnShipTimeMultiplier>
+    <DestructibleBlocks>true</DestructibleBlocks>
+    <EnableIngameScripts>true</EnableIngameScripts>
+    <ViewDistance>20000</ViewDistance>
+    <EnableToolShake>true</EnableToolShake>
+    <VoxelGeneratorVersion>0</VoxelGeneratorVersion>
+    <EnableOxygen>false</EnableOxygen>
+    <Enable3rdPersonView>true</Enable3rdPersonView>
+    <EnableEncounters>true</EnableEncounters>
+    <Battle>false</Battle>
+    <EnableStructuralSimulation>true</EnableStructuralSimulation>
+    <EnableBarbarians>true</EnableBarbarians>
+    <MaxActiveFracturePieces>400</MaxActiveFracturePieces>
+    <GameDayInRealMinutes>20</GameDayInRealMinutes>
+    <DayNightRatio>0.6666667</DayNightRatio>
+    <EnableAnimals>true</EnableAnimals>
+    <MaximumBots>10</MaximumBots>
+  </SessionSettings>
+  <Scenario>
+    <TypeId>MyObjectBuilder_ScenarioDefinition</TypeId>
+    <SubtypeId>Quickstart</SubtypeId>
+  </Scenario>
+  <LoadWorld />
+  <IP>0.0.0.0</IP>
+  <SteamPort>8766</SteamPort>
+  <ServerPort>27016</ServerPort>
+  <AsteroidAmount>0</AsteroidAmount>
+  <Administrators />
+  <Banned />
+  <Mods />
+  <GroupID>0</GroupID>
+  <ServerName>Test1</ServerName>
+  <WorldName>Test2</WorldName>
+  <PauseGameWhenEmpty>true</PauseGameWhenEmpty>
+  <IgnoreLastSession>false</IgnoreLastSession>
+</MyConfigDedicated>

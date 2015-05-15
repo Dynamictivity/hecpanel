@@ -24,9 +24,8 @@ echo $this->Form->create('InstanceType', array(
 ));
 ?>
 <fieldset>
-	<legend><?php echo __('Admin Add Instance Type'); ?></legend>
+	<legend><?php echo __('Admin Add %s Instance Type', $games[$this->params->pass[0]]); ?></legend>
 	<?php echo $this->Form->input('name'); ?>
-	<?php echo $this->Form->input('game_id'); ?>
 	<?php echo $this->Form->buildDynamicForm('InstanceType', $this->data); ?>
 </fieldset>
 <div class="form-group">
