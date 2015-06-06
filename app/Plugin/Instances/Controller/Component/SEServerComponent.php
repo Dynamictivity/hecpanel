@@ -553,10 +553,7 @@ class SEServerComponent extends Component {
 			// Host server based on least usage
 			$availableHostServers = $this->HostServer->find('list', array(
 				'conditions' => array(
-					'or' => array(
-						'HostServer.instance_count <' => $this->hostServerInstanceLimit,
-						'HostServer.instance_count < HostServer.instance_limit'
-					)
+					'HostServer.instance_count <' => $this->hostServerInstanceLimit,
 				),
 				'order' => array(
 					'HostServer.instance_count ASC'

@@ -3,6 +3,7 @@ ALTER TABLE `instance_profiles` ADD `profile_settings` TEXT NOT NULL AFTER `user
 ALTER TABLE `instance_types` ADD `profile_settings` TEXT NOT NULL AFTER `name`;
 ALTER TABLE `instance_profiles` ADD `game_id` INT NOT NULL AFTER `user_id`;
 ALTER TABLE `instance_types` ADD `game_id` INT NOT NULL AFTER `name`;
+ALTER TABLE `host_servers` DROP `instance_limit`;
 
 DROP TABLE IF EXISTS `configurations`;
 CREATE TABLE IF NOT EXISTS `configurations` (
@@ -28,9 +29,9 @@ INSERT INTO `configurations` (`id`, `name`, `configuration_scope`, `role_id`, `v
 (10, 'environment', 'Hecpanel.App', NULL, 'DEV', '2015-05-14 09:47:00', '2015-05-14 09:47:00'),
 (11, 'googleAnalyticsId', 'Hecpanel.App', NULL, 'UA-5187184-20', '2015-05-14 09:47:58', '2015-05-14 09:47:58'),
 (12, 'allowedActions', 'Hecpanel.Controller.Users', NULL, 'signup,confirm,logout,login,forgot,reset,eula', '2015-05-14 09:49:24', '2015-05-14 09:49:24'),
-(13, 'newAccountSubject', 'Hecpanel.Email', NULL, 'Welcome to the Hosting Engineers Control Panel', '2015-05-14 09:50:00', '2015-05-14 09:50:00'),
-(14, 'newInstanceSubject', 'Hecpanel.Email', NULL, 'Your Hosting Engineers Server Instance is Created', '2015-05-14 09:50:18', '2015-05-14 09:50:18'),
-(15, 'resetAccountSubject', 'Hecpanel.Email', NULL, 'Reset Your Hosting Engineers Control Panel Password', '2015-05-14 09:50:34', '2015-05-14 09:50:34'),
+(13, 'newAccountSubject', 'Hecpanel.Email', NULL, 'Welcome to the Hosted Engineers Control Panel', '2015-05-14 09:50:00', '2015-05-14 09:50:00'),
+(14, 'newInstanceSubject', 'Hecpanel.Email', NULL, 'Your Hosted Engineers Server Instance is Created', '2015-05-14 09:50:18', '2015-05-14 09:50:18'),
+(15, 'resetAccountSubject', 'Hecpanel.Email', NULL, 'Reset Your Hosted Engineers Control Panel Password', '2015-05-14 09:50:34', '2015-05-14 09:50:34'),
 (16, 'defaultRoleId', 'Hecpanel.Users', NULL, '4', '2015-05-14 09:51:18', '2015-05-14 09:51:18'),
 (17, 'confirmedRoleId', 'Hecpanel.Users', NULL, '3', '2015-05-14 09:51:36', '2015-05-14 09:51:36'),
 (18, 'prohibitedFields', 'Hecpanel.Form.InstanceType', NULL, 'name,game_id,load_world,server_port,server_admins,group_id,server_name,world_name,created,updated', '2015-05-15 08:20:09', '2015-05-15 09:05:46');

@@ -27,7 +27,6 @@
 				<th><?php echo $this->Paginator->sort('hostname'); ?></th>
 				<th><?php echo $this->Paginator->sort('ip'); ?></th>
 				<th><?php echo $this->Paginator->sort('instance_count'); ?></th>
-				<th><?php echo $this->Paginator->sort('instance_limit', 'Instance Limit Override'); ?></th>
 				<th><?php echo $this->Paginator->sort('updated'); ?></th>
 				<th class="actions"><?php echo __('Actions'); ?></th>
             </tr>
@@ -39,7 +38,6 @@
 					<td><?php echo h($hostServer['HostServer']['hostname']); ?>&nbsp;</td>
 					<td><?php echo h($hostServer['HostServer']['ip']); ?>&nbsp;</td>
 					<td><?php echo h($hostServer['HostServer']['instance_count']); ?>&nbsp;</td>
-					<td><?php echo h($hostServer['HostServer']['instance_limit']); ?>&nbsp;</td>
 					<td><?php echo h($hostServer['HostServer']['updated']); ?>&nbsp;</td>
 					<td class="actions">
 						<?php echo $this->Html->buttonGroup(
