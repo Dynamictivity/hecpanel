@@ -391,6 +391,7 @@ class SEServerComponent extends Component {
 			//	</Administrators>
 			$parsedAdmins = "<Administrators>\r\n";
 			foreach ($explodedAdmins as $admin) {
+				$admin = str_replace(' ', '', $admin);
 				if (!$admin) {
 					continue;
 				}
@@ -483,6 +484,7 @@ class SEServerComponent extends Component {
 		if (!empty($modList)) {
 			$explodedMods = array_unique(explode("\r\n", $modList));
 			foreach ($explodedMods as $mod) {
+				$mod = str_replace(' ', '', $mod);
 				if (!$mod) {
 					continue;
 				}
