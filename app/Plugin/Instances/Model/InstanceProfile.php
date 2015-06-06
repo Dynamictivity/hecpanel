@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  HE cPanel -- Hosting Engineers Control Panel
  *  Copyright (C) 2015  Dynamictivity LLC (http://www.hecpanel.com)
@@ -30,32 +31,38 @@ App::uses('InstancesAppModel', 'Instances.Model');
  */
 class InstanceProfile extends InstancesAppModel {
 
-    /**
-     * Validation rules
-     *
-     * @var array
-     */
-    public $validate = array(
-        'name' => array(
-            'notEmpty' => array(
-                'rule' => array('notEmpty'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
-        'user_id' => array(
-            'uuid' => array(
-                'rule' => array('uuid'),
-                //'message' => 'Your custom message here',
-                'allowEmpty' => false,
-            //'required' => true,
-            //'last' => false, // Stop validation after this rule
-            //'on' => 'create', // Limit validation to 'create' or 'update' operations
-            ),
-        ),
+	public $actsAs = array(
+		'JsonColumn' => array(
+			'fields' => array('profile_settings')
+		)
+	);
+
+	/**
+	 * Validation rules
+	 *
+	 * @var array
+	 */
+	public $validate = array(
+		'name' => array(
+			'notEmpty' => array(
+				'rule' => array('notEmpty'),
+				//'message' => 'Your custom message here',
+				'allowEmpty' => false,
+			//'required' => true,
+			//'last' => false, // Stop validation after this rule
+			//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'user_id' => array(
+			'uuid' => array(
+				'rule' => array('uuid'),
+				//'message' => 'Your custom message here',
+				'allowEmpty' => false,
+			//'required' => true,
+			//'last' => false, // Stop validation after this rule
+			//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
         'game_mode' => array(
             'notEmpty' => array(
                 'rule' => array('notEmpty'),
@@ -376,7 +383,7 @@ class InstanceProfile extends InstancesAppModel {
             //'on' => 'create', // Limit validation to 'create' or 'update' operations
             ),
         ),
-        'scenario_subtype_id' => array(
+        'enable_tool_shake' => array(
             'notEmpty' => array(
                 'rule' => array('notEmpty'),
                 //'message' => 'Your custom message here',
@@ -386,61 +393,98 @@ class InstanceProfile extends InstancesAppModel {
             //'on' => 'create', // Limit validation to 'create' or 'update' operations
             ),
         ),
-    );
+        'enable_tool_shake' => array(
+            'notEmpty' => array(
+                'rule' => array('notEmpty'),
+                //'message' => 'Your custom message here',
+                'allowEmpty' => false,
+            //'required' => true,
+            //'last' => false, // Stop validation after this rule
+            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+            ),
+        ),
+        'enable_3rd_person_view' => array(
+            'notEmpty' => array(
+                'rule' => array('notEmpty'),
+                //'message' => 'Your custom message here',
+                'allowEmpty' => false,
+            //'required' => true,
+            //'last' => false, // Stop validation after this rule
+            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+            ),
+        ),
+        'enable_encounters' => array(
+            'notEmpty' => array(
+                'rule' => array('notEmpty'),
+                //'message' => 'Your custom message here',
+                'allowEmpty' => false,
+            //'required' => true,
+            //'last' => false, // Stop validation after this rule
+            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+            ),
+        ),
+	);
 
-    //The Associations below have been created with all possible keys, those that are not needed can be removed
+	/**
+	 * belongsTo associations
+	 *
+	 * @var array
+	 */
+	public $belongsTo = array(
+		'User' => array(
+			'className' => 'User',
+			'foreignKey' => 'user_id',
+		)
+	);
 
-    /**
-     * belongsTo associations
-     *
-     * @var array
-     */
-    public $belongsTo = array(
-        'User' => array(
-            'className' => 'User',
-            'foreignKey' => 'user_id',
-            'conditions' => '',
-            'fields' => '',
-            'order' => ''
-        )
-    );
+	/**
+	 * hasMany associations
+	 *
+	 * @var array
+	 */
+	public $hasMany = array(
+		'Instance' => array(
+			'className' => 'Instance',
+			'foreignKey' => 'instance_profile_id',
+			'dependent' => true,
+		)
+	);
 
-    /**
-     * hasMany associations
-     *
-     * @var array
-     */
-    public $hasMany = array(
-        'Instance' => array(
-            'className' => 'Instance',
-            'foreignKey' => 'instance_profile_id',
-            'dependent' => true,
-            'conditions' => '',
-            'fields' => '',
-            'order' => '',
-            'limit' => '',
-            'offset' => '',
-            'exclusive' => '',
-            'finderQuery' => '',
-            'counterQuery' => ''
-        )
-    );
+	public function generateCloneName($sourceName) {
+		$cloneNumber = 0;
+		$nameExists = true;
+		while ($nameExists) {
+			$proposedCloneName = $sourceName . '_Clone' . ++$cloneNumber;
+			$nameExists = $this->find('count', array(
+				'conditions' => array(
+					'InstanceProfile.name' => $proposedCloneName,
+					'InstanceProfile.user_id' => AuthComponent::user('id')
+				)
+			));
+		}
+		return $proposedCloneName;
+	}
 
-    public function generateCloneName($sourceName) {
-        $cloneNumber = '0';
-        $nameExists = true;
-        while ($nameExists) {
-            $cloneNumber++;
-            $proposedCloneName = $sourceName . '_Clone' . $cloneNumber;
-            $nameExists = $this->find('count', array(
-                'conditions' => array(
-                    'InstanceProfile.name' => $proposedCloneName,
-                    'InstanceProfile.user_id' => AuthComponent::user('id')
-                )
-                    )
-            );
-        }
-        return $proposedCloneName;
-    }
+	// TODO: Create behavior for serialization
+	public function loadProfile($id) {
+		//$this->recursive = -1;
+		$this->read(null, $id);
+		$profileSettings = $this->data[$this->alias]['profile_settings'];
+		unset($this->data[$this->alias]['profile_settings']);
+		$this->data[$this->alias] = array_merge(
+			$this->data[$this->alias], $profileSettings
+		);
+		return $this->data;
+	}
+	
+	// TODO: Create behavior for serialization
+	public function saveProfile($profileData) {
+		$this->id = $profileData[$this->alias]['id'];
+		$profileSettings = array_diff_key($profileData[$this->alias], $this->schema());
+		$profileSettingKeys = array_keys($profileSettings);
+		$this->data[$this->alias] = strip_keys($profileData[$this->alias], $profileSettingKeys);
+		$this->data[$this->alias]['profile_settings'] = $profileSettings;
+		return $this->save();
+	}
 
 }

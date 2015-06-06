@@ -29,7 +29,6 @@ echo $this->Form->create('HostServer', array(
 	echo $this->Form->input('servername');
 	echo $this->Form->input('hostname');
 	echo $this->Form->input('ip');
-	echo $this->Form->input('instance_limit', array('label' => 'Instance Limit Override'));
 	?>
 </fieldset>
 <div class="form-group">

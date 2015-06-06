@@ -26,6 +26,7 @@
 				<tr>
 					<th><?php echo $this->Paginator->sort('status', 'Memory'); ?></th>
 					<th><?php echo $this->Paginator->sort('name'); ?></th>
+					<th><?php echo $this->Paginator->sort('game_id'); ?></th>
 					<th><?php echo $this->Paginator->sort('host_server_id', 'Server Instance IP:Port'); ?></th>
 					<th><?php echo $this->Paginator->sort('instance_type_id'); ?></th>
 					<th><?php echo $this->Paginator->sort('instance_profile_id'); ?></th>
@@ -40,6 +41,7 @@
 						<?php echo $this->Html->link('<span class="glyphicon glyphicon-repeat btn-xs"></span>', array('action' => 'check', $instance['Instance']['id']), array('escape' => false, 'title' => __('Update Status'))); ?>
 					</td>
 					<td><?php echo h($instance['Instance']['name']); ?>&nbsp;</td>
+					<td><?php echo h($games[$instance['Instance']['game_id']]); ?>&nbsp;</td>
 					<td><?php echo $this->Html->link($instance['HostServer']['ip'] . ':' . $instance['Instance']['port'], 'steam://connect/' . $instance['HostServer']['ip'] . ':' . $instance['Instance']['port']); ?>&nbsp;</td>
 					<td><?php echo h($instance['InstanceType']['name']); ?>&nbsp;</td>
 					<td><?php echo h($instance['InstanceProfile']['name']); ?>&nbsp;</td>

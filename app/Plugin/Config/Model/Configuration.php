@@ -55,9 +55,8 @@ class Configuration extends AppModel {
             'order' => ''
     ));
 
-    // TODO: Use array and single query
-    public function load($subScope) {
-        $settings = $this->find('all', array('conditions' => array('Configuration.configuration_scope LIKE' => APP_CONFIG_SCOPE . '.' . $subScope)));
+    public function load() {
+        $settings = $this->find('all');
         foreach ($settings as $setting) {
             Configure::write($setting['Configuration']['configuration_scope'] . '.' . $setting['Configuration']['name'], $setting['Configuration']['value']);
         }

@@ -21,7 +21,7 @@
 <div class="row">
 	<div class="container">
 		<span class="pull-right">
-			<?php echo $this->Html->link('<button type="button" class="btn btn-primary buy-button">Add New</button>', array('action' => 'add'), array('escape' => false, 'title' => __('Add New'))); ?>
+			<?php echo $this->Html->link('<button type="button" class="btn btn-primary add-button">Add New</button>', array('action' => 'add'), array('escape' => false, 'title' => __('Add New'))); ?>
 		</span>
 	</div>
 </div>

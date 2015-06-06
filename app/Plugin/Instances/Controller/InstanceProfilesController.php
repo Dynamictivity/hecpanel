@@ -59,19 +59,28 @@ class InstanceProfilesController extends InstancesAppController {
      *
      * @return void
      */
-    public function add() {
-        if ($this->request->is('post')) {
+    public function add($gameId = null) {
+		if ($gameId < 0 || $gameId === null) {
+			$games = $this->SEServer->getGameList();
+			$this->set(compact('games'));
+			$this->render('/elements/game_selection');
+			return;
+			//throw new NotFoundException(__('Invalid game selected'));
+		}
+        $this->request->data['InstanceProfile']['game_id'] = $gameId;
+		if ($this->request->is('post')) {
             $this->request->data['InstanceProfile']['user_id'] = AuthComponent::user('id');
             $this->InstanceProfile->create();
-            if ($this->InstanceProfile->save($this->request->data)) {
+            if ($this->InstanceProfile->saveProfile($this->request->data)) {
                 $this->setFlash(__('The instance profile has been saved.'));
                 return $this->redirect(array('action' => 'index'));
             } else {
                 $this->setFlash(__('The instance profile could not be saved. Please, try again.'), 'danger');
             }
         }
+		$this->request->data = $this->SEServer->setForm($gameId, $this->request->data, 'InstanceProfile');
         // Set form configuration options
-        $this->set($this->SEServer->getConfigOptions('SessionSettings'));
+        $this->set($this->SEServer->getConfigOptions($gameId));
     }
 
     public function duplicate($id = null) {
@@ -88,14 +97,12 @@ class InstanceProfilesController extends InstancesAppController {
         $this->InstanceProfile->create();
         if ($this->request->is(array('post', 'put'))) {
             if ($this->InstanceProfile->save($this->request->data)) {
-                $this->setFlash(__('The instance profile has been saved.'));
+                $this->setFlash(__('The instance profile has been duplicated.'));
                 return $this->redirect(array('action' => 'index'));
             } else {
-                $this->setFlash(__('The instance profile could not be saved. Please, try again.'), 'danger');
+                $this->setFlash(__('The instance profile could not be duplicated. Please, try again.'), 'danger');
+                return $this->redirect(array('action' => 'index'));
             }
-        } else {
-            $options = array('conditions' => array('InstanceProfile.' . $this->InstanceProfile->primaryKey => $id));
-            $this->request->data = $this->InstanceProfile->find('first', $options);
         }
         $this->autoRender = false;
     }
@@ -108,25 +115,51 @@ class InstanceProfilesController extends InstancesAppController {
      * @return void
      */
     public function edit($id = null) {
-        // Check ownership // TODO: Create proper method for this?
+		// Check ownership // TODO: Create proper method for this?
         $this->InstanceProfile->id = $id;
         if (!$this->InstanceProfile->exists($id) || (AuthComponent::user('role_id') > 2 && $this->InstanceProfile->field('user_id') !== AuthComponent::user('id'))) {
             throw new NotFoundException(__('Invalid instance profile'));
         }
         if ($this->request->is(array('post', 'put'))) {
-            if ($this->InstanceProfile->save($this->request->data)) {
+            if ($this->InstanceProfile->saveProfile($this->request->data)) {
                 $this->setFlash(__('The instance profile has been saved.'));
                 return $this->redirect(array('action' => 'index'));
             } else {
                 $this->setFlash(__('The instance profile could not be saved. Please, try again.'), 'danger');
             }
         } else {
-            $options = array('conditions' => array('InstanceProfile.' . $this->InstanceProfile->primaryKey => $id));
-            $this->request->data = $this->InstanceProfile->find('first', $options);
+            $this->request->data = $this->InstanceProfile->loadProfile($id);
         }
+		$this->request->data = $this->SEServer->setForm($this->request->data['InstanceProfile']['game_id'], $this->request->data, 'InstanceProfile');
         // Set form configuration options
-        $this->set($this->SEServer->getConfigOptions('SessionSettings'));
+        $this->set($this->SEServer->getConfigOptions($this->request->data['InstanceProfile']['game_id']));
     }
+	
+	// Convert old instance profile type to new
+	// TODO: Remove this after use
+	public function admin_convert() {
+		$this->InstanceProfile->recursive = -1;
+		$instanceProfiles = $this->InstanceProfile->find('all');
+		foreach ($instanceProfiles as $instanceProfile) {
+			$convertedProfile['InstanceProfile'] = array(
+				'id' => $instanceProfile['InstanceProfile']['id'],
+			);
+			$this->InstanceProfile->id = $instanceProfile['InstanceProfile']['id'];
+			
+			unset($instanceProfile['InstanceProfile']['id']);
+			unset($instanceProfile['InstanceProfile']['name']);
+			unset($instanceProfile['InstanceProfile']['game_id']);
+			unset($instanceProfile['InstanceProfile']['user_id']);
+			unset($instanceProfile['InstanceProfile']['created']);
+			unset($instanceProfile['InstanceProfile']['updated']);
+			unset($instanceProfile['InstanceProfile']['profile_settings']);
+			
+			$convertedProfile['InstanceProfile']['profile_settings'] = $instanceProfile['InstanceProfile'];
+			$this->InstanceProfile->save($convertedProfile);
+		}
+		$this->setFlash(__('The instance profiles have been converted.'));
+		return $this->redirect(array('action' => 'index'));
+	}
 
     /**
      * delete method

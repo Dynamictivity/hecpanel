@@ -55,6 +55,7 @@ class AppController extends Controller {
             'authorize' => 'Controller'
         ),
         'RequestHandler',
+		'DebugKit.Toolbar',
     );
     public $helpers = array(
         'Html' => array('className' => 'BoostCake.BoostCakeHtml'),
@@ -69,7 +70,7 @@ class AppController extends Controller {
             ),
         ),
         'Paginator' => array('className' => 'BoostCake.BoostCakePaginator'),
-        'Time'
+        'Time',
     );
 
     // Alert

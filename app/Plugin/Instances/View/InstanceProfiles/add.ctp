@@ -24,45 +24,9 @@ echo $this->Form->create('InstanceProfile', array(
 ));
 ?>
 <fieldset>
-	<legend><?php echo __('Add Instance Profile'); ?></legend>
-	<?php
-	echo $this->Form->input('name');
-	echo $this->Form->input('game_mode');
-	echo $this->Form->input('inventory_size_multiplier');
-	echo $this->Form->input('assembler_speed_multiplier');
-	echo $this->Form->input('assembler_efficiency_multiplier');
-	echo $this->Form->input('refinery_speed_multiplier');
-	echo $this->Form->input('online_mode');
-	echo $this->Form->input('max_floating_objects');
-	echo $this->Form->input('environment_hostility');
-	echo $this->Form->input('auto_healing');
-	echo $this->Form->input('enable_copy_paste');
-	echo $this->Form->input('auto_save');
-	echo $this->Form->input('weapons_enabled');
-	echo $this->Form->input('show_player_names_on_hud');
-	echo $this->Form->input('thruster_damage');
-	echo $this->Form->input('cargo_ships_enabled');
-	echo $this->Form->input('enable_spectator');
-	echo $this->Form->input('remove_trash');
-	echo $this->Form->input('world_size_km');
-	echo $this->Form->input('respawn_ship_delete');
-	echo $this->Form->input('reset_ownership');
-	echo $this->Form->input('welder_speed_multiplier');
-	echo $this->Form->input('grinder_speed_multiplier');
-	echo $this->Form->input('realistic_sound');
-	echo $this->Form->input('client_can_save');
-	echo $this->Form->input('hack_speed_multiplier');
-	echo $this->Form->input('permanent_death');
-	echo $this->Form->input('spawn_ship_time_multiplier');
-	echo $this->Form->input('procedural_density');
-	echo $this->Form->input('procedural_seed');
-	echo $this->Form->input('destructible_blocks');
-	echo $this->Form->input('enable_ingame_scripts');
-	echo $this->Form->input('enable_oxygen');
-	echo $this->Form->input('view_distance');
-	echo $this->Form->input('scenario_subtype_id');
-	echo $this->Form->input('asteroid_amount');
-	?>
+	<legend><?php echo __('Add %s Instance Profile', $games[$this->params->pass[0]]); ?></legend>
+	<?php echo $this->Form->input('name'); ?>
+	<?php echo $this->Form->buildDynamicForm('InstanceProfile', $this->data); ?>
 </fieldset>
 <div class="form-group">
 	<?php echo $this->Form->submit(__('Submit'), Configure::read('Bootstrap.formButtonStyle')); ?>

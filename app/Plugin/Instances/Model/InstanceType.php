@@ -30,6 +30,12 @@ App::uses('InstancesAppModel', 'Instances.Model');
  */
 class InstanceType extends InstancesAppModel {
 
+	public $actsAs = array(
+		'JsonColumn' => array(
+			'fields' => array('instance_settings')
+		)
+	);
+
     /**
      * Validation rules
      *
@@ -386,6 +392,16 @@ class InstanceType extends InstancesAppModel {
             //'on' => 'create', // Limit validation to 'create' or 'update' operations
             ),
         ),
+        'enable_tool_shake' => array(
+            'notEmpty' => array(
+                'rule' => array('notEmpty'),
+                //'message' => 'Your custom message here',
+                'allowEmpty' => false,
+            //'required' => true,
+            //'last' => false, // Stop validation after this rule
+            //'on' => 'create', // Limit validation to 'create' or 'update' operations
+            ),
+        ),
         'scenario_subtype_id' => array(
             'notEmpty' => array(
                 'rule' => array('notEmpty'),
@@ -450,5 +466,27 @@ class InstanceType extends InstancesAppModel {
             'counterQuery' => ''
         )
     );
+
+	// TODO: Create behavior for serialization
+	public function loadProfile($id) {
+		//$this->recursive = -1;
+		$this->read(null, $id);
+		$profileSettings = $this->data[$this->alias]['profile_settings'];
+		unset($this->data[$this->alias]['profile_settings']);
+		$this->data[$this->alias] = array_merge(
+			$this->data[$this->alias], $profileSettings
+		);
+		return $this->data;
+	}
+	
+	// TODO: Create behavior for serialization
+	public function saveProfile($profileData) {
+		$this->id = $profileData[$this->alias]['id'];
+		$profileSettings = array_diff_key($profileData[$this->alias], $this->schema());
+		$profileSettingKeys = array_keys($profileSettings);
+		$this->data[$this->alias] = strip_keys($profileData[$this->alias], $profileSettingKeys);
+		$this->data[$this->alias]['profile_settings'] = $profileSettings;
+		return $this->save();
+	}
 
 }
