@@ -37,6 +37,9 @@
             <?php echo $this->Html->link('<i class="fa fa-dashboard"></i>&nbsp;&nbsp;&nbsp;' . __('Host Servers'), array('controller' => 'host_servers', 'action' => 'index', 'admin' => true, 'plugin' => 'instances'), array('escape' => false)); ?></li>
         </li>
         <li>
+            <?php echo $this->Html->link('<i class="fa fa-dashboard"></i>&nbsp;&nbsp;&nbsp;' . __('Refresh Instance Count'), array('controller' => 'host_servers', 'action' => 'refresh_counts', 'admin' => true, 'plugin' => 'instances'), array('escape' => false)); ?></li>
+        </li>
+        <li>
             <?php echo $this->Html->link('<i class="fa fa-dashboard"></i>&nbsp;&nbsp;&nbsp;' . __('Command Queue'), array('controller' => 'command_queues', 'action' => 'index', 'admin' => true, 'plugin' => 'instances'), array('escape' => false)); ?></li>
         </li>
         <li>

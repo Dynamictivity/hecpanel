@@ -80,15 +80,21 @@ class HostServer extends InstancesAppModel {
 //		)
 //	);
 
-    public function updateInstanceCount($hostServerId) {
+    public function updateInstanceCount($hostServerId = null) {
         $this->id = $hostServerId;
-        if (!$this->exists()) {
-            throw new NotFoundException(__('Invalid host server'));
-        }
-        // TEMP: Because we don't have containable
-        // TODO: Containable
-        $Instance = ClassRegistry::init('Instance');
-        $this->saveField('instance_count', $Instance->find('count', array('conditions' => array('Instance.host_server_id' => $hostServerId))));
+        if ($this->exists()) {
+			$hostServers = (array)$hostServerId;
+        } else {
+			$hostServers = array_keys($this->find('list'));
+		}
+		foreach ($hostServers as $hostServerId) {
+			$this->id = $hostServerId;
+			// TEMP: Because we don't have containable
+			// TODO: Containable
+			$Instance = ClassRegistry::init('Instance');
+			$this->saveField('instance_count', $Instance->find('count', array('conditions' => array('Instance.host_server_id' => $hostServerId))));
+		}
+		return true;
     }
 
 }

@@ -117,4 +117,16 @@ class HostServersController extends InstancesAppController {
         return $this->redirect(array('action' => 'index'));
     }
 
+    /**
+     * admin_refresh_counts method
+     */
+    public function admin_refresh_counts() {
+        if ($this->HostServer->updateInstanceCount()) {
+            $this->setFlash(__('The host server counts have been updated.'));
+        } else {
+            $this->setFlash(__('The host server counts could not be updated.'), 'danger');
+        }
+        return $this->redirect(array('action' => 'index'));
+    }
+
 }
