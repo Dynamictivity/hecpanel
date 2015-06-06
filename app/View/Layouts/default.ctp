@@ -54,6 +54,7 @@ $websiteDescription = Configure::read(APP_CONFIG_SCOPE . '.App.appName');
         <?php
         echo $this->Html->css('ux-admin');
         echo $this->Html->css('ux-flat');
+        echo $this->Html->css('hse');
         ?>
 
         <!-- Favicon -->

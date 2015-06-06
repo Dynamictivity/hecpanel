@@ -61,7 +61,11 @@ class InstanceProfilesController extends InstancesAppController {
      */
     public function add($gameId = null) {
 		if ($gameId < 0 || $gameId === null) {
-			throw new NotFoundException(__('Invalid game selected'));
+			$games = $this->SEServer->getGameList();
+			$this->set(compact('games'));
+			$this->render('/elements/game_selection');
+			return;
+			//throw new NotFoundException(__('Invalid game selected'));
 		}
         $this->request->data['InstanceProfile']['game_id'] = $gameId;
 		if ($this->request->is('post')) {
